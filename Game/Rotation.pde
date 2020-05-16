@@ -1,3 +1,5 @@
+public float ROTATION; // [-PI, PI]
+
 // read mouse input and return looking direction [-PI, PI]
 public void updateRotation() {
   ROTATION = getRotationFromMouse();

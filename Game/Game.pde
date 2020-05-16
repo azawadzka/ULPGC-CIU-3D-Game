@@ -1,8 +1,3 @@
-//https://www.myminifactory.com/object/3d-print-venus-aphrodite-is-the-goddess-of-love-she-was-depicted-in-the-nude-or-in-various-stages-of-nudity-and-painted-the-figure-is-executed-in-the-hellenistic-style-and-famed-for-its-sensuous-appearance-it-supposedly-lost-its-arms-in-a-struggle-arising-b-25162
-//https://opengameart.org/
-
-public float ROTATION; // [-PI, PI]
-
 Board board;
 Room room;
 Player player;
