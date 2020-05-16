@@ -95,7 +95,7 @@ class Room {
       for (int j = 0; j < board.size; j++) {
         if (board.board[i][j] != null) {
           pushMatrix();
-          translate(i * TILE + TILE/2, 0, j * TILE + TILE/2);
+          translate(i * Room.TILE, 0, j * Room.TILE);
           shape(board.board[i][j]);
           popMatrix();
         }

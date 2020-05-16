@@ -19,10 +19,12 @@ void draw() {
   updateRotation();
   
   hint(ENABLE_DEPTH_TEST); 
-  directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+  //directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+  lights();
   camera.cam();
   player.move();
   room.display();
+  //board.debug_show_elements_on_board();
   
   hint(DISABLE_DEPTH_TEST);
   arrow.display();
