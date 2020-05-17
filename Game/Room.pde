@@ -1,6 +1,7 @@
 class Room {
   
   public static final float TILE = 150;
+  public static final float ROOM_HEIGHT = -500;
   
   Board board;
   
@@ -10,7 +11,7 @@ class Room {
    
   float b; // board size
   float p; // floor texture proportion
-  float h = -500; 
+  float h = Room.ROOM_HEIGHT; // alias for readibility of vertex creation code where all parameters are single letters
   
   public Room(Board board) {
     this.board = board;
