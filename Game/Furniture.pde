@@ -1,31 +1,26 @@
-class Furniture {
+class Obstacle {
 
   public PShape shape;
-  public int p, r;
   public int size_p, size_r;
   
-  public float offset_x, offset_y;
+  public float offset_x, offset_z;
 
-  public Furniture() {
+  public Obstacle() {
     shape = new PShape();
   }
 
-  public Furniture(PShape s, int p, int r) {
+  public Obstacle(PShape s) {
     this.shape = s;
-    this.p = p;
-    this.r = r;
   }
   
-    public Furniture(PShape s, int p, int r, int s_p, int s_r) {
+    public Obstacle(PShape s, int s_p, int s_r) {
     this.shape = s;
-    this.p = p;
-    this.r = r;
     this.size_p = s_p;
     this.size_r = s_r;
   }
   
-  public void set_offset(float offset_x, float offset_y){
+  public void set_offset(float offset_x, float offset_z){
     this.offset_x = offset_x;
-    this.offset_y = offset_y;
+    this.offset_z = offset_z;
   }
 }

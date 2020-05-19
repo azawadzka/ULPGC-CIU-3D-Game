@@ -4,12 +4,12 @@ Player player;
 Camera camera;
 Arrow arrow;
 
-FurnitureFactory furnitureFactory;
+ObstacleFactory obstacleFactory;
 
 void setup() {
   size(1000, 700, P3D);
   board = new Board();
-  furnitureFactory = new FurnitureFactory();
+  obstacleFactory = new ObstacleFactory();
   createGameObjects();
   room = new Room(board);
   player = new Player();
