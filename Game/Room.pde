@@ -97,7 +97,7 @@ class Room {
         if (board.board[i][j] != null) {
           pushMatrix();
           translate(i * Room.TILE, 0, j * Room.TILE);
-          translate(board.board[i][j].offset_x, 0, board.board[i][j].offset_z);
+          translate(board.board[i][j].offset_x, board.board[i][j].offset_y, board.board[i][j].offset_z);
           shape(board.board[i][j].shape);
           popMatrix();
         }
