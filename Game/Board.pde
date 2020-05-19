@@ -1,18 +1,18 @@
 class Board {
   
   int size;
-  private PShape[][] board;
+  private Obstacle[][] board;
   
   public Board() {
     this.size = 8;
-    board = new PShape[size][size];
+    board = new Obstacle[size][size];
   }
   
   public boolean is_free(int p, int r) {
     return check_if_free(p, r);
   }
   
-  public boolean put_on_board(PShape element, int p, int r) {
+  public boolean put_on_board(Obstacle element, int p, int r) {
     if (check_if_free(p, r)) {
       board[p][r] = element;
       return true;
@@ -21,7 +21,7 @@ class Board {
     return false;
   }
   
-  public boolean put_on_board(PShape element, int p, int r, int size_p, int size_r) {
+  public boolean put_on_board(Obstacle element, int p, int r, int size_p, int size_r) {
     for (int i = p; i < p + size_p; i++) {
       for (int j = r; j < r + size_r; j++) {
         if (!check_if_free(i, j)) {
@@ -31,7 +31,7 @@ class Board {
       }
     }
     
-    PShape placeholder = new PShape();
+    Obstacle placeholder = new Obstacle();
     for (int i = p; i < p + size_p; i++) {
       for (int j = r; j < r + size_r; j++) {
         if (i == p && j == r) {
