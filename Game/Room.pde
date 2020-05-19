@@ -96,7 +96,7 @@ class Room {
         if (board.board[i][j] != null) {
           pushMatrix();
           translate(i * Room.TILE, 0, j * Room.TILE);
-          translate(Room.TILE/2, 0, Room.TILE/2); // to center PShape on tile
+          translate(board.board[i][j].offset_x, 0, board.board[i][j].offset_y);
           shape(board.board[i][j].shape);
           popMatrix();
         }

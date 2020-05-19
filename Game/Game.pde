@@ -4,12 +4,12 @@ Player player;
 Camera camera;
 Arrow arrow;
 
-ThingFactory thingFactory;
+FurnitureFactory thingFactory;
 
 void setup() {
   size(1000, 700, P3D);
   board = new Board();
-  thingFactory = new ThingFactory();
+  thingFactory = new FurnitureFactory();
   createGameObjects();
   room = new Room(board);
   player = new Player();
@@ -28,7 +28,7 @@ void draw() {
   camera.cam();
   player.move();
   room.display();
-  board.debug_show_elements_on_board();
+ // board.debug_show_elements_on_board();
 
   hint(DISABLE_DEPTH_TEST);
   arrow.display();

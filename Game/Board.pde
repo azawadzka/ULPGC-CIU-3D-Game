@@ -1,18 +1,18 @@
 class Board {
   
   int size;
-  private Thing[][] board;
+  private Furniture[][] board;
   
   public Board() {
     this.size = 8;
-    board = new Thing[size][size];
+    board = new Furniture[size][size];
   }
   
   public boolean is_free(int p, int r) {
     return check_if_free(p, r);
   }
   
-  public boolean put_on_board(Thing element, int p, int r) {
+  public boolean put_on_board(Furniture element, int p, int r) {
     if (check_if_free(p, r)) {
       board[p][r] = element;
       return true;
@@ -21,7 +21,7 @@ class Board {
     return false;
   }
   
-  public boolean put_on_board(Thing element, int p, int r, int size_p, int size_r) {
+  public boolean put_on_board(Furniture element, int p, int r, int size_p, int size_r) {
     for (int i = p; i < p + size_p; i++) {
       for (int j = r; j < r + size_r; j++) {
         if (!check_if_free(i, j)) {
@@ -31,7 +31,7 @@ class Board {
       }
     }
     
-    Thing placeholder = new Thing();
+    Furniture placeholder = new Furniture();
     for (int i = p; i < p + size_p; i++) {
       for (int j = r; j < r + size_r; j++) {
         if (i == p && j == r) {
