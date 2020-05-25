@@ -51,6 +51,10 @@ class Board {
     return true;
   }
   
+  public void free_element(int p, int r){
+    board[p][r] = null;
+  }
+  
   /*
   This method is for debugging. It paints in red the fields on board that have been 
   allocated with some PShapes using the public method put_on_board(). 
