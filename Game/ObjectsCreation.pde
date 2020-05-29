@@ -5,4 +5,5 @@ void createGameObjects() {
   board.put_on_board(obstacleFactory.createWall(), 5, 4);
   
   board.put_on_board(obstacleFactory.bomb(), 2, 2);
+  board.put_on_board(obstacleFactory.pot(), 4, 6);
 }

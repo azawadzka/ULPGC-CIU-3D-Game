@@ -39,14 +39,13 @@ void draw() {
   arrow.display();
   showItemList();
   if (room.getItem() != null && room.getItem().getPickable()) {
-
   }
 }
 
 void showItemList() {
   camera();
-  for (int i = 0; i< items.size(); i++) {
-    image(items.get(i).getImage(), 20, height-100);
+  for (int i = 0; i < items.size(); i++) {
+    image(items.get(i).getIcon(), (1+i) * 100, height-100);
   }
 }
 
@@ -60,7 +59,7 @@ void mouseClicked() {
 
 void keyPressed() {
   if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
-    
+
     items.add(room.getItem());
     room.getItem().setPickable(false);
     board.free_element(room.itemP(), room.itemR());

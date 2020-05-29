@@ -13,4 +13,12 @@ class ObstacleFactory {
     bombObstacle.set_offset(Room.TILE/2, 0, Room.TILE/2); // to center object on tile
     return bombObstacle;
   }
+  
+  Obstacle pot() {
+    PShape model = loadShape("resources/pot/pot.obj");
+    model.scale(80,-80,80);
+    Obstacle obstacle = new Obstacle(model,true,loadImage("resources/pot/pot.png"));
+    obstacle.set_offset(Room.TILE/2, -20, Room.TILE/2); // to center object on tile
+    return obstacle;
+  }
 }
