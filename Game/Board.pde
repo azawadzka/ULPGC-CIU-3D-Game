@@ -3,8 +3,8 @@ class Board {
   int size;
   private Obstacle[][] board;
   
-  public Board() {
-    this.size = 8;
+  public Board(int size) {
+    this.size = size;
     board = new Obstacle[size][size];
   }
   

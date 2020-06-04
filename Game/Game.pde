@@ -4,21 +4,19 @@ Player player;
 Camera camera;
 Arrow arrow;
 
+BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
 
 ArrayList<Obstacle> items;
 
+int level = 0;
 
 void setup() {
   size(1000, 700, P3D);
   items = new ArrayList<Obstacle>();
-  board = new Board();
   obstacleFactory = new ObstacleFactory();
-  createGameObjects();
-  room = new Room(board);
-  player = new Player();
-  camera = new Camera(player);
-  arrow = new Arrow(player);
+  boardFactory = new BoardFactory();
+  next_level();
   smooth(8);
   //noCursor();
 }
@@ -42,6 +40,20 @@ void draw() {
   }
 }
 
+void next_level() {
+  level++;
+  board = boardFactory.create_board_for_level(level);
+  if (board == null) {
+    print("game finished. You won");
+    exit();
+    return;
+  }
+  room = new Room(board);
+  player = new Player();
+  camera = new Camera(player);
+  arrow = new Arrow(player);
+}
+
 void showItemList() {
   camera();
   for (int i = 0; i < items.size(); i++) {
@@ -50,6 +62,7 @@ void showItemList() {
 }
 
 void mouseClicked() {
+
   if (player.request_move()) {
     arrow.cancel_false_click();
   } else {
@@ -58,6 +71,8 @@ void mouseClicked() {
 }
 
 void keyPressed() {
+  if (key == 'l') next_level();
+
   if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
 
     items.add(room.getItem());
