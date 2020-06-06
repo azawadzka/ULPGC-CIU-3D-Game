@@ -47,5 +47,12 @@ class Player {
     }
   }
 
+  public int getP(){
+    return p;
+  }
+  
+    public int getR(){
+    return r;
+  }
   
 }

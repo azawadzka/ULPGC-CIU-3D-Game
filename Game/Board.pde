@@ -3,8 +3,8 @@ class Board {
   int size;
   private Obstacle[][] board;
   
-  public Board() {
-    this.size = 8;
+  public Board(int size) {
+    this.size = size;
     board = new Obstacle[size][size];
   }
   
@@ -49,6 +49,10 @@ class Board {
     if (r < 0 || r >= size) return false;
     if (board[p][r] != null) return false;
     return true;
+  }
+  
+  public void free_element(int p, int r){
+    board[p][r] = null;
   }
   
   /*

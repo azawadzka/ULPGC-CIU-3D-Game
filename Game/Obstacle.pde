@@ -2,6 +2,10 @@ class Obstacle {
 
   public PShape shape;
   public int size_p, size_r;
+  private boolean pickable;  //With a boolean we identify which item is pickable or not
+  
+  private PImage icon;
+  
 
   public float offset_x, offset_y, offset_z;
 
@@ -9,8 +13,10 @@ class Obstacle {
     shape = new PShape();
   }
 
-  public Obstacle(PShape s) {
+  public Obstacle(PShape s, boolean pick, PImage icon) {
     this.shape = s;
+    this.pickable = pick;
+    this.icon = icon;
   }
 
   public Obstacle(PShape s, int s_p, int s_r) {
@@ -24,4 +30,21 @@ class Obstacle {
     this.offset_y = offset_y;
     this.offset_z = offset_z;
   }
+  
+  public void setPickable(boolean v){
+    this.pickable = v;
+  }
+  
+  public boolean getPickable(){
+    return this.pickable;
+  }
+  
+  public PImage getIcon(){
+    return icon;
+  }
+  
+  
+  
+  
+  
 }
