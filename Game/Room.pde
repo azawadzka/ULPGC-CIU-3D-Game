@@ -7,13 +7,12 @@ class Room {
 
   Player player;  //Get player position
 
-  Obstacle item;  //Get the item to pick
+  Obstacle item;  //Get the current interactable item
+  int item_p; //current interactable item position i
+  int item_r; //current interactable item position j
 
   PShape floor;
   PImage tex_floor, tex_wall, tex_ceiling;
-
-  int item_p; //pickable item position i
-  int item_r; //pickable item position j
 
   float b; // board size
   float p; // floor texture proportion
@@ -21,8 +20,10 @@ class Room {
 
   boolean pickable;
 
-  public Room(Board board) {
+
+  public Room(Board board, Player player) {
     this.board = board;
+    this.player = player;
     this.b = board.size * TILE;
     this.p = board.size;
 
@@ -36,7 +37,8 @@ class Room {
     display_walls();
     display_ceiling();
     display_figures();
-    pickableObject();
+    display_and_update_current_item();
+    check_ending_level();
   }
 
   private void display_floor() {
@@ -115,25 +117,44 @@ class Room {
   }
 
 
-
-  private void pickableObject() {
+  private void display_and_update_current_item() {
     for (int i = 0; i < board.size; i++) {
       for (int j = 0; j < board.size; j++) {
         if (board.board[i][j] != null) {
-          if (i-1 >=0  && j-1 >= 0) {  //Quitar esta condicion para hacerlo en isOnRange
-            if (board.board[i][j].pickable && isOnRange(i, j)) {
-              camera();
-              item_p = i;
-              item_r = j;
-              showText();
-              item = board.board[i][j];
-              return;
-            }
+          if (board.board[i][j].isUnlockable() && isOnRangeUnlock(i, j)) {
+            update_item_info(i, j);
+            showUnlockMessage();
+            return;
+          } else if (board.board[i][j].pickable && isOnRange(i, j)) {
+            update_item_info(i, j);
+            showText();
+            return;
           }
         }
       }
     }
     item = null;
+  }
+
+
+  private boolean player_can_unlock() {
+
+    if (item == null) return false;
+    else if (item.getRequirement() == null) return false;
+
+    for (int i = 0; i < board.size; i++) {
+      for (int j = 0; j < board.size; j++) {
+        if (board.board[i][j] != null) {
+          if (isOnRangeUnlock(i, j)) {
+            if (board.board[i][j].isUnlockable()) {
+              return player.owns_item_to_unlock(board.board[item_p][item_r].getRequirement());
+            }
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   private boolean isOnRange(int i, int j) {
@@ -149,10 +170,23 @@ class Room {
     return false;
   }
 
+
+  private boolean isOnRangeUnlock(int i, int j) {
+    //Hacer las condiciones de control de outOfBounds
+    if (player.getP() == i && player.getR() == j-1) return true;
+    if (player.getP() == i-1 && player.getR() == j) return true;
+    if (player.getP() == i+1 && player.getR() == j) return true;
+    if (player.getP() == i && player.getR() == j+1) return true;
+    return false;
+  }
+
   private void showText() {
     hint(DISABLE_DEPTH_TEST);
+
     textSize(24);
+    camera();
     fill(128);
+
     text("Press ", width/2-150, height/2+100);
     fill(255, 255, 0);
     text("F", width/2-150+textWidth("Press "), height/2+100);
@@ -162,18 +196,46 @@ class Room {
     hint(ENABLE_DEPTH_TEST);
   }
 
-  public void setPlayer(Player pl) {
-    this.player = pl;
+  private void showUnlockMessage() {
+
+    hint(DISABLE_DEPTH_TEST);
+
+    textSize(24);
+    camera();
+    fill(128);
+
+    if (player.owns_item_to_unlock(board.board[item_p][item_r].getRequirement())) {
+      text("Pulsa ", width/2-150, height/2+100);
+      fill(255, 255, 0);
+      text("B", width/2-150+textWidth("Pulsa "), height/2+100);
+      fill(128);
+      text(" para romper la pared", width/2-150+textWidth("Pulsa B"), height/2+100);
+      fill(255);
+    } else {
+      text("Necesitas el objeto ", width/2-150, height/2+100);
+      fill(0, 0, 255);
+      text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("Necesitas el objeto "), height/2+100);
+      fill(255);
+    }
+    hint(ENABLE_DEPTH_TEST);
   }
+
+  private void update_item_info(int i, int j) {
+    item_p = i;
+    item_r = j;
+    this.item = board.board[item_p][item_r];
+  }
+
+
+  private boolean check_ending_level() {
+    if (board.ending_p == player.getP() && board.ending_r == player.getR()) {
+      return true;
+    }
+    return false;
+  }
+
 
   public Obstacle getItem() {
     return item;
-  }
-
-  public int itemP() {
-    return item_p;
-  }
-  public int itemR() {
-    return item_r;
   }
 }
