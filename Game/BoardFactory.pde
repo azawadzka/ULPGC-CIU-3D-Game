@@ -1,6 +1,10 @@
 
 class BoardFactory {
 
+  /*Level 1: 8x8 board
+             Item to pick: 8 , 3
+             Ending level: 8 , 8
+  */
 private Board create_board1() {
   Board board = new Board(8);
 
