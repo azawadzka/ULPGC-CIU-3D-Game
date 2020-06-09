@@ -3,6 +3,9 @@ class Board {
   int size;
   private Obstacle[][] board;
   
+  int ending_p;
+  int ending_r;
+  
   public Board(int size) {
     this.size = size;
     board = new Obstacle[size][size];
@@ -53,6 +56,11 @@ class Board {
   
   public void free_element(int p, int r){
     board[p][r] = null;
+  }
+  
+  public void ending_level(int p, int r){
+    ending_p = p;
+    ending_r = r;
   }
   
   /*

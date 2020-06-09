@@ -7,13 +7,10 @@ Arrow arrow;
 BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
 
-ArrayList<Obstacle> items;
-
 int level = 0;
 
 void setup() {
   size(1000, 700, P3D);
-  items = new ArrayList<Obstacle>();
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
   next_level();
@@ -29,15 +26,15 @@ void draw() {
   lights();
   camera.cam();
   player.move();
-  room.setPlayer(player);
   room.display();
+  if(room.check_ending_level()){
+    next_level();
+  }
   // board.debug_show_elements_on_board();
 
   hint(DISABLE_DEPTH_TEST);
   arrow.display();
-  showItemList();
-  if (room.getItem() != null && room.getItem().getPickable()) {
-  }
+  player.inventory.display();
 }
 
 void next_level() {
@@ -48,17 +45,10 @@ void next_level() {
     exit();
     return;
   }
-  room = new Room(board);
-  player = new Player();
+  player = new Player(new Inventory(), board);
+  room = new Room(board, player);
   camera = new Camera(player);
   arrow = new Arrow(player);
-}
-
-void showItemList() {
-  camera();
-  for (int i = 0; i < items.size(); i++) {
-    image(items.get(i).getIcon(), (1+i) * 100, height-100);
-  }
 }
 
 void mouseClicked() {
@@ -74,9 +64,15 @@ void keyPressed() {
   if (key == 'l') next_level();
 
   if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
+    Obstacle item = room.getItem();
+    item.setPickable(false);
+    player.inventory.addItem(item);
+    board.free_element(room.item_p, room.item_r);
+  }
 
-    items.add(room.getItem());
-    room.getItem().setPickable(false);
-    board.free_element(room.itemP(), room.itemR());
+  if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
+    board.free_element(room.item_p, room.item_r);    
+    player.inventory.removeItem(room.getItem());
+    player.inventory.display();
   }
 }

@@ -3,6 +3,11 @@ class Obstacle {
   public PShape shape;
   public int size_p, size_r;
   private boolean pickable;  //With a boolean we identify which item is pickable or not
+
+  private boolean unlockable;
+  private String name;
+  private String requirement;
+
   
   private PImage icon;
   
@@ -13,10 +18,14 @@ class Obstacle {
     shape = new PShape();
   }
 
-  public Obstacle(PShape s, boolean pick, PImage icon) {
+
+  public Obstacle(PShape s, boolean pick, PImage icon,boolean unlockable,String name,String requirement) {
     this.shape = s;
     this.pickable = pick;
     this.icon = icon;
+    this.unlockable = unlockable;
+    this.requirement = requirement;
+    this.name=name;
   }
 
   public Obstacle(PShape s, int s_p, int s_r) {
@@ -43,8 +52,21 @@ class Obstacle {
     return icon;
   }
   
+
+  public boolean isUnlockable(){
+    return this.unlockable;
+  }
   
+    public void setUnlockable(boolean change){
+    unlockable = change;
+  }
   
+  public String getRequirement(){
+    return requirement;
+  }
   
-  
+  public String getNombre(){
+    return name;
+  }
+
 }

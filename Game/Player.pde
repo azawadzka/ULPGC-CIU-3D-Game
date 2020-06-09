@@ -1,22 +1,32 @@
 class Player {
-  
+
   public static final int MOVE_TIME = 30;
-  
+
   Board board;
-  
+
+  Inventory inventory;
+
   private float x, z;
   int p, r; //coordinates on the board
   int timer = 0;
   int move_p = 0, move_r = 0;
-  
-  public Player() {
-    this.board = room.board;
+
+  public Player(Inventory i, Board board) {
+    this.inventory = i;
+    this.board = board;
     this.x = Room.TILE/2;
     this.z = Room.TILE/2;
     this.p=0; 
     this.r=0;
   }
-  
+
+  private boolean owns_item_to_unlock(String neededItemName) {
+    if (inventory.getItemByName(neededItemName) != null) {
+      return true;
+    }
+    return false;
+  }
+
   public boolean request_move() {
     if (!ready_to_move()) return false;
     int[] val = getWalkingDirection();
@@ -30,15 +40,15 @@ class Player {
     }
     return false;
   }
-  
+
   private boolean allowed_move(int mp, int mr) {
     return board.is_free(p + mp, r + mr);
   }
-  
+
   private boolean ready_to_move() {
     return timer == 0;
   }
-  
+
   private void move() {
     if (timer != 0) {
       x += move_p * Room.TILE/MOVE_TIME;
@@ -47,12 +57,11 @@ class Player {
     }
   }
 
-  public int getP(){
+  public int getP() {
     return p;
   }
-  
-    public int getR(){
+
+  public int getR() {
     return r;
   }
-  
 }
