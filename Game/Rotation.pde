@@ -4,12 +4,17 @@ int angulo;
 
 
 // read mouse input and return looking direction [-PI, PI]
-  public void updateRotation() {
-    ROTATION = getRotation();
-   
-  }
 
-/* ACTUALMENTE SUSTITUIDO
+//-----------------------------------------------------NO ES NECESARIO-------------------------------
+public void updateRotation() {
+  ROTATION = getRotation();
+}
+
+//-------------------------------------------------------------------------------------------------------------------
+
+
+
+/* ACTUALMENTE SUSTITUIDO,   BORRAMOS????
  private float getRotationFromMouse() {
  return map(mouseX, 0, width, -PI, PI);
  
@@ -25,17 +30,10 @@ private float getRotation() {
   case 1: 
     joystickX=mouseX;
   }
-
-  //return joystickX;
-  /*if(joystickX>=1200 ){
-    joystickX=127;
-  }else if(joystickX<=120){
-    joystickX=1193;
-  }*/
-  if(joystickX>1000){
+  if (joystickX>1000) {
     joystickX=0;
-  }else if(joystickX<0){
-  joystickX=1000;
+  } else if (joystickX<0) {
+    joystickX=1000;
   }
   return map(joystickX, 0, width, -PI, PI);
 }
@@ -47,7 +45,7 @@ other sensors...
 //Returns a pair of values -1 or 1 that represents the change of position of board in axes X and Z based on current rotation.
 public int[] getWalkingDirection() {
   int mp, mr;
-  
+
   if (joystickX>875 || joystickX<125 ) {
     mp = -1;
     mr = 0;
