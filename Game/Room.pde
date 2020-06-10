@@ -1,3 +1,18 @@
+/*
+Room
+
+This class draws the Board that has been passed as an argument of its constructor. It stores all data that is 
+characteristic to the instance of chamber. 
+
+It does: 
+  - store all information that is necessery to draw a chamber, that is: the board (sizes, objects, etc.) and all 
+    visual data (pixel sizes, brushes and textures)
+  - perform the drawing
+It doesn't:
+  - do any logical operations like putting on board, detecting collisions, interact with objects
+  - draw the user interface
+*/
+
 class Room {
 
   public static final float TILE = 150;
@@ -13,18 +28,18 @@ class Room {
 
   PImage tex_floor, tex_wall, tex_ceiling, normal_tex_floor, normal_tex_wall, normal_tex_ceiling, debug_tex_floor, debug_tex_wall, debug_tex_ceiling;
 
-  float b; // board size
-  float p; // floor texture proportion
+  float bp, br; // board sizes
+  float tp, tr; // floor texture proportion
   float h = Room.ROOM_HEIGHT; // alias for readibility of vertex creation code where all parameters are single letters
-
-  boolean pickable;
 
 
   public Room(Board board, Player player) {
     this.board = board;
     this.player = player;
-    this.b = board.size * TILE;
-    this.p = board.size;
+    this.bp = board.size_p * TILE;
+    this.br = board.size_r * TILE;
+    this.tp = board.size_p;
+    this.tr = board.size_r;
 
     normal_tex_floor = loadImage("resources/level" + level + "/floor.png");
     normal_tex_wall = loadImage("resources/level" + level + "/wall.png");
@@ -62,9 +77,9 @@ class Room {
     // PShape doesn't support texture wrap so manual vertex definition has been used
     beginShape();
     vertex(0, 0, 0, 0, 0);
-    vertex(0, 0, b, 0, p);
-    vertex(b, 0, b, p, p);
-    vertex(b, 0, 0, p, 0);
+    vertex(0, 0, br, 0, tr);
+    vertex(bp, 0, br, tp, tr);
+    vertex(bp, 0, 0, tp, 0);
     texture(tex_floor);
     textureWrap(REPEAT);
     endShape();
@@ -73,9 +88,9 @@ class Room {
   private void display_ceiling() {
     beginShape();
     vertex(0, h, 0, 0, 0);
-    vertex(0, h, b, 0, p);
-    vertex(b, h, b, p, p);
-    vertex(b, h, 0, p, 0);
+    vertex(0, h, br, 0, tr);
+    vertex(bp, h, br, tp, tr);
+    vertex(bp, h, 0, tp, 0);
     texture(tex_ceiling);
     textureWrap(REPEAT);
     endShape();
@@ -85,43 +100,43 @@ class Room {
     beginShape();
     vertex(0, 0, 0, 0, 0);
     vertex(0, h, 0, 0, 1);
-    vertex(b, h, 0, p, 1);
-    vertex(b, 0, 0, p, 0);
+    vertex(bp, h, 0, tp, 1);
+    vertex(bp, 0, 0, tp, 0);
     texture(tex_wall);
     textureWrap(REPEAT);
     endShape(); 
 
     beginShape();
-    vertex(b, 0, 0, 0, 0);
-    vertex(b, h, 0, 0, 1);
-    vertex(b, h, b, p, 1);
-    vertex(b, 0, b, p, 0);
+    vertex(bp, 0, 0, 0, 0);
+    vertex(bp, h, 0, 0, 1);
+    vertex(bp, h, br, tr, 1);
+    vertex(bp, 0, br, tr, 0);
     texture(tex_wall);
     textureWrap(REPEAT);
     endShape(); 
 
     beginShape();
-    vertex(b, 0, b, 0, 0);
-    vertex(b, h, b, 0, 1);
-    vertex(0, h, b, p, 1);
-    vertex(0, 0, b, p, 0);
+    vertex(bp, 0, br, 0, 0);
+    vertex(bp, h, br, 0, 1);
+    vertex(0, h, br, tp, 1);
+    vertex(0, 0, br, tp, 0);
     texture(tex_wall);
     textureWrap(REPEAT);
     endShape(); 
 
     beginShape();
-    vertex(0, 0, b, 0, 0);
-    vertex(0, h, b, 0, 1);
-    vertex(0, h, 0, p, 1);
-    vertex(0, 0, 0, p, 0);
+    vertex(0, 0, br, 0, 0);
+    vertex(0, h, br, 0, 1);
+    vertex(0, h, 0, tr, 1);
+    vertex(0, 0, 0, tr, 0);
     texture(tex_wall);
     textureWrap(REPEAT);
     endShape();
   }
 
   private void display_figures() {
-    for (int i = 0; i < board.size; i++) {
-      for (int j = 0; j < board.size; j++) {
+    for (int i = 0; i < board.size_p; i++) {
+      for (int j = 0; j < board.size_r; j++) {
         if (board.board[i][j] != null) {
           pushMatrix();
           translate(i * Room.TILE, 0, j * Room.TILE);
@@ -133,10 +148,10 @@ class Room {
     }
   }
 
-
+//-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
   private void display_and_update_current_item() {
-    for (int i = 0; i < board.size; i++) {
-      for (int j = 0; j < board.size; j++) {
+    for (int i = 0; i < board.size_p; i++) {
+      for (int j = 0; j < board.size_p; j++) {
         if (board.board[i][j] != null) {
           if (board.board[i][j].isUnlockable() && isOnRangeUnlock(i, j)) {
             update_item_info(i, j);
@@ -159,8 +174,8 @@ class Room {
     if (item == null) return false;
     else if (item.getRequirement() == null) return false;
 
-    for (int i = 0; i < board.size; i++) {
-      for (int j = 0; j < board.size; j++) {
+    for (int i = 0; i < board.size_p; i++) {
+      for (int j = 0; j < board.size_r; j++) {
         if (board.board[i][j] != null) {
           if (isOnRangeUnlock(i, j)) {
             if (board.board[i][j].isUnlockable()) {
@@ -245,7 +260,7 @@ class Room {
 
 
   private boolean check_ending_level() {
-    if (board.ending_p == player.getP() && board.ending_r == player.getR()) {
+    if (board.door_p == player.getP() && board.door_r == player.getR()) {
       return true;
     }
     return false;
@@ -256,3 +271,4 @@ class Room {
     return item;
   }
 }
+//------------------------------------------------------------------------------------------------------------------------------
