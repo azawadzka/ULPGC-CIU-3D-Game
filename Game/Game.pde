@@ -67,11 +67,11 @@ void keyPressed() {
     Obstacle item = room.getItem();
     item.setPickable(false);
     player.inventory.addItem(item);
-    board.free_element(room.item_p, room.item_r);
+    board.remove_from_board(room.item_p, room.item_r);
   }
 
   if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-    board.free_element(room.item_p, room.item_r);    
+    board.remove_from_board(room.item_p, room.item_r);    
     player.inventory.removeItem(room.getItem());
     player.inventory.display();
   }

@@ -6,7 +6,7 @@ public void updateRotation() {
 }
 
 private float getRotationFromMouse() {
-  return map(mouseX, 0, width, -PI, PI);
+  return map(mouseX, 0, width, 0, 15) % TWO_PI - PI;
 }
 
 /*
