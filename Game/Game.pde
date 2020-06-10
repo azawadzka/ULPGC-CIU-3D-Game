@@ -1,3 +1,4 @@
+
 import processing.video.*;
 import processing.serial.*;
 Capture cam;
@@ -7,7 +8,10 @@ Room room;
 Player player;
 Camera camera;
 Arrow arrow;
+Menu menu;
 int tint;
+
+int status;  //which part is the player
 
 //COSAS PARA LECTOR SERIAL
 int [] buffer= new int[3] ;
@@ -26,6 +30,7 @@ void setup() {
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
+  menu = new Menu();
   next_level();
   smooth(8);
   tint=0;
@@ -44,30 +49,43 @@ void setup() {
 }
 
 void draw() {  
-  updateRotation();
+  switch(status) {
+  case 0:
+    menu.display();
+    break;
+  case 1:
+    menu.controllers();
+    break;
+  case 2:
+    menu.credits();
+    break;
+  case 3:
+    updateRotation();
 
-  hint(ENABLE_DEPTH_TEST); 
-  //directionalLight(100, 100, 100, 0, 1, 0); // dim lights
-  lights();
-  camera.cam();
-  player.move();
-  room.display();
-  if (room.check_ending_level()) {
-    transicion();
-  } else {
-    fill(255, 255, 255, 255);
-    tint=0;
+    hint(ENABLE_DEPTH_TEST); 
+    //directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+    lights();
+    camera.cam();
+    player.move();
+    room.display();
+    if (room.check_ending_level()) {
+      transicion();
+    } else {
+      fill(255, 255, 255, 255);
+      tint=0;
+    }
+    // board.debug_show_elements_on_board();
+
+    hint(DISABLE_DEPTH_TEST);
+    arrow.display();
+    player.inventory.display();
+
+    /*if (cam.available()) {
+     cam.read();
+     image(cam, 0, 0, 320, 240);
+     }*/
+    break;
   }
-  // board.debug_show_elements_on_board();
-
-  hint(DISABLE_DEPTH_TEST);
-  arrow.display();
-  player.inventory.display();
-
-  /*if (cam.available()) {
-   cam.read();
-   image(cam, 0, 0, 320, 240);
-   }*/
 }
 
 void next_level() {
@@ -97,19 +115,62 @@ void mouseClicked() {
 }
 
 void keyPressed() {
-  if (key == 'l') next_level();
+  switch(status) {
+  case 0:
+    if (keyCode==UP) {
+      menu.options--;
+      if (menu.options<0)menu.options=2;
+    } else if (keyCode==DOWN) {
+      menu.options++;
+      if (menu.options>2)menu.options=0;
+    }
+
+    if (keyCode==ENTER) {
+
+      switch(menu.options) {
+      case 0:
+        status=3;
+        menu.intro.stop();
+        textFont(createFont("SansSerif", 16));
+        break;
+      case 1:
+        status=1;
+        break;
+      case 2:
+        status=2;
+        break;
+      }
+    }
+
+    break;
+  case 1:
+    if (keyCode == ENTER) {
+      status=0;
+    }
+    break;
+
+  case 2:
+    if (keyCode == ENTER) {
+      status=0;
+    }  
+    break;
+
+  case 3:
+    if (key == 'l') next_level();
 
     if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
-    Obstacle item = room.getItem();
-    item.setPickable(false);
-    player.inventory.addItem(item);
-    board.free_element(room.item_p, room.item_r);
-  }
+      Obstacle item = room.getItem();
+      item.setPickable(false);
+      player.inventory.addItem(item);
+      board.free_element(room.item_p, room.item_r);
+    }
 
-  if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-    board.free_element(room.item_p, room.item_r);    
-    player.inventory.removeItem(room.getItem());
-    player.inventory.display();
+    if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
+      board.free_element(room.item_p, room.item_r);    
+      player.inventory.removeItem(room.getItem());
+      player.inventory.display();
+    }
+    break;
   }
 }
 
