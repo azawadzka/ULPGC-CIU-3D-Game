@@ -26,9 +26,9 @@ class Room {
     this.b = board.size * TILE;
     this.p = board.size;
 
-    normal_tex_floor = loadImage("resources/floor.png");
-    normal_tex_wall = loadImage("resources/wall.png");
-    normal_tex_ceiling = loadImage("resources/ceil.png");
+    normal_tex_floor = loadImage("resources/level" + level + "/floor.png");
+    normal_tex_wall = loadImage("resources/level" + level + "/wall.png");
+    normal_tex_ceiling = loadImage("resources/level" + level + "/ceil.png");
     debug_tex_floor = loadImage("resources/debug_floor.png");
     debug_tex_wall = loadImage("resources/debug_wall.png");
     debug_tex_ceiling = loadImage("resources/debug_ceil.png");
