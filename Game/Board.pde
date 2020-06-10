@@ -2,7 +2,7 @@
 Board
 
 This class implements the placement of figures on a chessboard-like structure where an obstacle or the player can be placed
-on spots and be recognised as a collisible object by other elements. It uses abstract coordenates on board P, R.  
+on spots and be recognised as a collisible object by other elements. It uses abstract coordinates on board P, R.  
 
 It does: 
   - define board sizes size_p and size_r in constructor

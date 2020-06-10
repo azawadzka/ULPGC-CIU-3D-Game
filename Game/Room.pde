@@ -243,7 +243,7 @@ class Room {
 
 
   private boolean check_ending_level() {
-    if (board.ending_p == player.getP() && board.ending_r == player.getR()) {
+    if (board.door_p == player.getP() && board.door_r == player.getR()) {
       return true;
     }
     return false;
