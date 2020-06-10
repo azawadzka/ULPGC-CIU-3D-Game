@@ -8,6 +8,7 @@ BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
 
 int level = 0;
+boolean debug = true;
 
 void setup() {
   size(1000, 700, P3D);
@@ -22,15 +23,16 @@ void draw() {
   updateRotation();
 
   hint(ENABLE_DEPTH_TEST); 
-  //directionalLight(100, 100, 100, 0, 1, 0); // dim lights
-  lights();
+  if (debug) debug_mode();
+  
+  directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+  
   camera.cam();
   player.move();
   room.display();
   if(room.check_ending_level()){
     next_level();
   }
-  // board.debug_show_elements_on_board();
 
   hint(DISABLE_DEPTH_TEST);
   arrow.display();
@@ -49,6 +51,11 @@ void next_level() {
   room = new Room(board, player);
   camera = new Camera(player);
   arrow = new Arrow(player);
+}
+
+public void debug_mode() {
+  lights();
+  board.debug_show_elements_on_board();
 }
 
 void mouseClicked() {
@@ -74,5 +81,11 @@ void keyPressed() {
     board.free_element(room.item_p, room.item_r);    
     player.inventory.removeItem(room.getItem());
     player.inventory.display();
+  }
+  
+  if (key == 'd' || key == 'D') {
+    debug = !debug;
+    if (debug) room.set_textures("DEBUG");
+    else room.set_textures("NORMAL");
   }
 }

@@ -11,8 +11,7 @@ class Room {
   int item_p; //current interactable item position i
   int item_r; //current interactable item position j
 
-  PShape floor;
-  PImage tex_floor, tex_wall, tex_ceiling;
+  PImage tex_floor, tex_wall, tex_ceiling, normal_tex_floor, normal_tex_wall, normal_tex_ceiling, debug_tex_floor, debug_tex_wall, debug_tex_ceiling;
 
   float b; // board size
   float p; // floor texture proportion
@@ -27,11 +26,16 @@ class Room {
     this.b = board.size * TILE;
     this.p = board.size;
 
-    tex_floor = loadImage("resources/floor.png");
-    tex_wall = loadImage("resources/wall.png");
-    tex_ceiling = loadImage("resources/ceil.png");
+    normal_tex_floor = loadImage("resources/floor.png");
+    normal_tex_wall = loadImage("resources/wall.png");
+    normal_tex_ceiling = loadImage("resources/ceil.png");
+    debug_tex_floor = loadImage("resources/debug_floor.png");
+    debug_tex_wall = loadImage("resources/debug_wall.png");
+    debug_tex_ceiling = loadImage("resources/debug_ceil.png");
+    
+    this.set_textures(debug ? "DEBUG" : "NORMAL");
   }
-
+  
   public void display() {
     display_floor();
     display_walls();
@@ -39,6 +43,19 @@ class Room {
     display_figures();
     display_and_update_current_item();
     check_ending_level();
+  }
+  
+  public void set_textures(String mode) {
+    // modes: NORMAL, DEBUG
+    if (mode == "NORMAL") {
+      tex_floor = normal_tex_floor;
+      tex_wall = normal_tex_wall;
+      tex_ceiling = normal_tex_ceiling;
+    } else if (mode == "DEBUG") {
+      tex_floor = debug_tex_floor;
+      tex_wall = debug_tex_wall;
+      tex_ceiling = debug_tex_ceiling;
+    }
   }
 
   private void display_floor() {
