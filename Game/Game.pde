@@ -74,7 +74,6 @@ void next_level() {
   board = boardFactory.create_board_for_level(level);
   if (board == null) {
     print("game finished. You won");
-    status=true;
     exit();
     return;
   }
