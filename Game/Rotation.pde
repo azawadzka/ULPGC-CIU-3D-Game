@@ -12,7 +12,6 @@ public void updateRotation() {
     ROTATION = getRotationFromMouse();
     break;
   }
-
 }
 
 
@@ -55,7 +54,7 @@ public int[] getWalkingDirection() {
 
 
 void reset_X_axis(){
-    if (x_axis_last_value>1000) {
+  if (x_axis_last_value>1000) {
     x_axis_last_value=0;
   } else if (x_axis_last_value<0) {
     x_axis_last_value=1000;

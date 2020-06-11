@@ -1,6 +1,6 @@
 import processing.video.*;
-Capture cam;
 
+Capture cam;
 Board board;
 Room room;
 Player player;
@@ -8,12 +8,13 @@ Camera camera;
 Arrow arrow;
 Menu menu;
 Arduino arduino;
-public Serial arduino_Serial;
-public int control=1;  //Para cambiar el control remoto.
+
+Serial arduino_Serial;
+int control=1;  //Para cambiar el control remoto.
 int tint;  // Opacity for transition scene
+
 boolean debug = true;
-
-
+boolean cam_on = false;
 boolean status;  //which part is the player
 
 BoardFactory boardFactory;
@@ -31,10 +32,6 @@ void setup() {
   tint=0;
   status=true;
   //noCursor();
-
-  //cam para demostracion
-  //cam = new Capture(this, 640, 480);
-  //cam.start();
 }
 
 void draw() {  
@@ -62,10 +59,10 @@ void draw() {
     arrow.display();
     player.inventory.display();
 
-    /*if (cam.available()) {
-     cam.read();
-     image(cam, 0, 0, 320, 240);
-     }*/
+    if (cam_on && cam.available()) {
+      cam.read();
+      image(cam, 0, 0, 320, 240);
+    }
   }
 }
 
@@ -90,7 +87,6 @@ void next_level() {
 }
 
 void mouseClicked() {
-
   if (true) {
     if (player.request_move()) {
       arrow.cancel_false_click();
@@ -101,7 +97,6 @@ void mouseClicked() {
 }
 
 void keyPressed() {
-
   if (status) {
 
     if (keyCode==UP) {
@@ -161,15 +156,28 @@ void keyPressed() {
     }
   }
   
-  
-    if (key == 'd' || key == 'D') {
+  // D - debug mode
+  if (key == 'd' || key == 'D') {
     debug = !debug;
     if (debug) room.set_textures("DEBUG");
     else room.set_textures("NORMAL");
   }
   
+  // C - video camera
+  if (key == 'c' || key == 'C') {
+    cam_on = !cam_on;
+    if (cam_on) {
+      try {
+        if (cam == null) cam = new Capture(this, 640, 480);
+        cam.start();
+      } catch (RuntimeException ex) {
+        cam_on = false;
+        println("Tried to activate camera but there are no devices available!");
+      }
+    }
+    else cam.stop();
+  }
 }
-
 
 void transition() {
   fill(0, 0, 0, tint);
@@ -181,7 +189,6 @@ void transition() {
     tint=0;
   }
 }
-
 
 void serialEvent(Serial arduino_Serial) {
   arduino.serial_Event_Manager(arduino_Serial);

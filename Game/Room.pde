@@ -4,7 +4,6 @@ class Room {
   public static final float ROOM_HEIGHT = -500;
 
   Board board;
-
   Player player;  //Get player position
 
   Obstacle item;  //Get the current interactable item
@@ -34,7 +33,7 @@ PImage tex_floor, tex_wall, tex_ceiling, normal_tex_floor, normal_tex_wall, norm
     debug_tex_wall = loadImage("resources/debug_wall.png");
     debug_tex_ceiling = loadImage("resources/debug_ceil.png");
 
-    this.set_textures(debug ? "DEBUG" : "NORMAL");
+    this.set_textures("NORMAL");
   }
 
   public void display() {
