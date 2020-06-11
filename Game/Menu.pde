@@ -16,7 +16,7 @@ class Menu {
   SoundFile intro;
   int tint;
   int options;
-
+  boolean Controllers_display=false, credits_display=false;
 
   public Menu() {
 
@@ -59,22 +59,48 @@ class Menu {
     tint++;
     if (tint>255)tint=255;
     fill(255);
+    if (Controllers_display) controllers();
+    if (credits_display) credits();
   }
-  
-  
-  public void controllers(){
+
+
+  public void controllers() {
     background(0);
     textAlign(CENTER);
-    text("TEST\nPRESS ENTER TO BACK TO THE MENU",width/2,height/2);
+    if (control==0) {
+      text("TEST\nPRESS LEFT BUTTON TO BACK TO THE MENU", width/2, height/2);
+    } else {
+      text("TEST\nPRESS ENTER TO BACK TO THE MENU", width/2, height/2);
+    }
+
     textAlign(BASELINE);
   }
-  
-    public void credits(){
+
+  public void credits() {
     background(0);
     textAlign(CENTER);
-    text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
-    "\nruben\nPRESS ENTER TO BACK TO THE MENU",width/2,200);
+    if (control==0) {
+      text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
+        "\nruben Garcia Quintana\nPRESS LEFT BUTTON TO BACK TO THE MENU", width/2, 200);
+    } else {
+      text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
+        "\nruben Garcia Quintana\nPRESS ENTER TO BACK TO THE MENU", width/2, 200);
+    }
+
     textAlign(BASELINE);
   }
-  
+
+
+  void set_controllers_display(boolean value) {
+    Controllers_display=value;
+  }
+  void set_credits_display(boolean value) {
+    credits_display=value;
+  }
+  boolean get_controllers_display() {
+    return Controllers_display;
+  }
+  boolean get_credits_display() {
+    return credits_display;
+  }
 }

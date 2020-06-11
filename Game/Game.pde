@@ -1,22 +1,25 @@
 import processing.video.*;
-import processing.serial.*;
+Capture cam;
 
 Board board;
 Room room;
 Player player;
 Camera camera;
 Arrow arrow;
+Menu menu;
+Arduino arduino;
+public Serial arduino_Serial;
+public int control=1;  //Para cambiar el control remoto.
+int tint;  // Opacity for transition scene
+boolean debug = true;
+
+
+boolean status;  //which part is the player
 
 BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
-int tint;
-int level = 0;
 
-//COSAS PARA LECTOR SERIAL
-int [] buffer= new int[3] ;
-public int control=0;  //Para cambiar el control remoto.
-public Serial arduinoSerial; //Conexion al Serial
-int joystickX=500; //rotación de la camara
+int level = 0;
 
 void setup() {
   size(1000, 700, P3D);
@@ -24,39 +27,51 @@ void setup() {
   boardFactory = new BoardFactory();
   next_level();
   smooth(8);
+  menu = new Menu();
+  tint=0;
+  status=true;
   //noCursor();
 
-  try {
-    arduinoSerial= new Serial(this, Serial.list()[0], 9600 );
-  }
-  catch(Exception e) {
-    control=1;
-  }
+  //cam para demostracion
+  //cam = new Capture(this, 640, 480);
+  //cam.start();
 }
 
 void draw() {  
-  updateRotation();
+  if (status) {
+    menu.display();
+  } else {
+    updateRotation();
 
-  hint(ENABLE_DEPTH_TEST); 
-  //directionalLight(100, 100, 100, 0, 1, 0); // dim lights
-  lights();
-  camera.cam();
-  player.move();
-  room.display();
-  if (room.check_ending_level()) {
-    next_level();
+    hint(ENABLE_DEPTH_TEST); 
+    if (debug) debug_mode();
+
+    directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+    camera.cam();
+    player.move();
+    room.display();
+    if (room.check_ending_level()) {
+      transition();
+    } else {
+      fill(255, 255, 255, 255);
+      tint=0;
+    }
+    // board.debug_show_elements_on_board();
+
+    hint(DISABLE_DEPTH_TEST);
+    arrow.display();
+    player.inventory.display();
+
+    /*if (cam.available()) {
+     cam.read();
+     image(cam, 0, 0, 320, 240);
+     }*/
   }
-  // board.debug_show_elements_on_board();
+}
 
-  hint(DISABLE_DEPTH_TEST);
-  arrow.display();
-  player.inventory.display();
-  
-  //PARA PRESENTACION
-  /*if (cam.available()) {
-   cam.read();
-   image(cam, 0, 0, 320, 240);
-   }*/
+public void debug_mode() {
+  lights();
+  board.debug_show_elements_on_board();
 }
 
 void next_level() {
@@ -64,6 +79,7 @@ void next_level() {
   board = boardFactory.create_board_for_level(level);
   if (board == null) {
     print("game finished. You won");
+    status=true;
     exit();
     return;
   }
@@ -75,87 +91,98 @@ void next_level() {
 
 void mouseClicked() {
 
-  if (player.request_move()) {
-    arrow.cancel_false_click();
-  } else {
-    arrow.set_false_click();
+  if (true) {
+    if (player.request_move()) {
+      arrow.cancel_false_click();
+    } else {
+      arrow.set_false_click();
+    }
   }
 }
 
 void keyPressed() {
-  if (key == 'l') next_level();
 
-  if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
-    Obstacle item = room.getItem();
-    item.setPickable(false);
-    player.inventory.addItem(item);
-    board.remove_from_board(room.item_p, room.item_r);
+  if (status) {
+
+    if (keyCode==UP) {
+      menu.options--;
+      if (menu.options<0)menu.options=2;
+    }
+
+    if (keyCode==DOWN) {
+      menu.options++;
+      if (menu.options>2)menu.options=0;
+    }
+
+    if (keyCode==ENTER) {
+      switch(menu.options) {
+
+      case 0:
+        status=false;
+        menu.intro.stop();
+        textFont(createFont("SansSerif", 16));
+        break;
+      case 1:
+        menu.set_controllers_display(!menu.get_controllers_display());
+        menu.set_credits_display(false);
+        break;
+      case 2:
+        menu.set_controllers_display(false);
+        menu.set_credits_display(!menu.get_credits_display());
+        break;
+      }
+    }
+  } else {
+    if (key == 'l') next_level();
+
+    if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
+      Obstacle item = room.getItem();
+      item.setPickable(false);
+      player.inventory.addItem(item);
+      board.free_element(room.item_p, room.item_r);
+    }
+
+    if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
+      board.free_element(room.item_p, room.item_r);    
+      player.inventory.removeItem(room.getItem());
+      player.inventory.display();
+    }
   }
 
-  if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-    board.remove_from_board(room.item_p, room.item_r);    
-    player.inventory.removeItem(room.getItem());
-    player.inventory.display();
+  // J - joystick control
+  if (key == 'j' || key == 'J') {
+    try {
+      arduino_Serial= new Serial(this, Serial.list()[0], 9600);
+      arduino= new Arduino(arduino_Serial);
+      control = 0;
+    } 
+    catch (Exception e) {
+      control = 1;
+    }
   }
+  
+  
+    if (key == 'd' || key == 'D') {
+    debug = !debug;
+    if (debug) room.set_textures("DEBUG");
+    else room.set_textures("NORMAL");
+  }
+  
 }
 
 
-
-void transicion() {
+void transition() {
   fill(0, 0, 0, tint);
   rect(0, 0, width, height);
   tint+=4;
   if (tint >255) {
     fill(255, 255, 255, 255);
-    next_level();
-    tint = 0;
+    next_level(); 
+    tint=0;
   }
 }
 
 
-
-
-/*
-*  Eventos del Serial
- */
-void serialEvent(Serial arduinoSerial) {
-  arduinoSerial.bufferUntil('\n');
-  String aux=arduinoSerial.readStringUntil('\n'); //es necesario crear una variable auxiliar, lo explico en otro momento xD
-  if (aux != null)buffer= int(split(aux, "-"));
-  angulo=buffer[0];
-  if (buffer[1]==1)rightButtonClicked();
-  if (buffer[2]==1)leftButtonClicked();
+void serialEvent(Serial arduino_Serial) {
+  arduino.serial_Event_Manager(arduino_Serial);
 }
-
-
-
-
-void rightButtonClicked() {
-  if (player.request_move()) {
-    arrow.cancel_false_click();
-  } else {
-    arrow.set_false_click();
-  }
-}
-
-
-
-
-void leftButtonClicked() {
-  if (room.getItem() != null && room.getItem().getPickable()) {
-
-    Obstacle item = room.getItem();
-    item.setPickable(false);
-    player.inventory.addItem(item);
-    board.free_element(room.item_p, room.item_r);
-  }
-
-  if (  room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-    board.free_element(room.item_p, room.item_r);    
-    player.inventory.removeItem(room.getItem());
-    player.inventory.display();
-  }
-}
-
-
-//FIN EVENTOS SERIAL
