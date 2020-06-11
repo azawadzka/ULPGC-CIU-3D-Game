@@ -11,11 +11,11 @@ Arduino arduino;
 
 Serial arduino_Serial;
 int control = 1;  //Para cambiar el control remoto.
-int tint;  // Opacity for transition scene
+int tint = 0;  // Opacity for transition scene
 
 boolean debug = true;
 boolean cam_on = false;
-boolean status;  //which part is the player
+boolean status = true;  //which part is the player
 
 BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
@@ -26,6 +26,7 @@ void setup() {
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
+  menu = new Menu();
   next_level();
   smooth(8);
   //noCursor();
@@ -65,7 +66,7 @@ void draw() {
 
 public void debug_mode() {
   lights();
-  board.debug_show_elements_on_board();
+  //board.debug_show_elements_on_board();
 }
 
 void next_level() {
