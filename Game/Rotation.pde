@@ -23,7 +23,7 @@ private float getRotationFromJoystick() {
 private float getRotationFromMouse() {
   x_axis_last_value=mouseX;
   reset_X_axis();
-  return map(mouseX, 0, width, 0, 10) % TWO_PI - PI;
+  return map(mouseX, 0, width, -PI, PI);
 }
 
 /*
