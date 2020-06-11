@@ -1,4 +1,4 @@
-public float ROTATION; // [-PI, PI] 
+public float ROTATION; // [-PI, PI]
 int x_axis_last_value=500;
 
 
@@ -14,7 +14,6 @@ public void updateRotation() {
   }
 }
 
-
 private float getRotationFromJoystick() {
   if (arduino.get_Joystick_X_Value()>515 || arduino.get_Joystick_X_Value()<500) x_axis_last_value+= (arduino.get_Joystick_X_Value()>507 ) ? +7 : -7;
   reset_X_axis();
@@ -24,14 +23,12 @@ private float getRotationFromJoystick() {
 private float getRotationFromMouse() {
   x_axis_last_value=mouseX;
   reset_X_axis();
-  return map(mouseX, 0, width, -PI, PI);
+  return map(mouseX, 0, width, 0, 10) % TWO_PI - PI;
 }
-
 
 /*
 other sensors...
  */
-
 
 //Returns a pair of values -1 or 1 that represents the change of position of board in axes X and Z based on current rotation.
 public int[] getWalkingDirection() {
@@ -51,7 +48,6 @@ public int[] getWalkingDirection() {
   }
   return new int[] {mp, mr};
 }
-
 
 void reset_X_axis(){
   if (x_axis_last_value>1000) {

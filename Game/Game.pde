@@ -10,7 +10,7 @@ Menu menu;
 Arduino arduino;
 
 Serial arduino_Serial;
-int control=1;  //Para cambiar el control remoto.
+int control = 1;  //Para cambiar el control remoto.
 int tint;  // Opacity for transition scene
 
 boolean debug = true;
@@ -28,9 +28,6 @@ void setup() {
   boardFactory = new BoardFactory();
   next_level();
   smooth(8);
-  menu = new Menu();
-  tint=0;
-  status=true;
   //noCursor();
 }
 
@@ -40,7 +37,7 @@ void draw() {
   } else {
     updateRotation();
 
-    hint(ENABLE_DEPTH_TEST); 
+    hint(ENABLE_DEPTH_TEST);
     if (debug) debug_mode();
 
     directionalLight(100, 100, 100, 0, 1, 0); // dim lights
@@ -138,7 +135,7 @@ void keyPressed() {
     }
 
     if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-      board.free_element(room.item_p, room.item_r);    
+      board.free_element(room.item_p, room.item_r);
       player.inventory.removeItem(room.getItem());
       player.inventory.display();
     }
@@ -150,19 +147,19 @@ void keyPressed() {
       arduino_Serial= new Serial(this, Serial.list()[0], 9600);
       arduino= new Arduino(arduino_Serial);
       control = 0;
-    } 
+    }
     catch (Exception e) {
       control = 1;
     }
   }
-  
+
   // D - debug mode
   if (key == 'd' || key == 'D') {
     debug = !debug;
     if (debug) room.set_textures("DEBUG");
     else room.set_textures("NORMAL");
   }
-  
+
   // C - video camera
   if (key == 'c' || key == 'C') {
     cam_on = !cam_on;
@@ -185,7 +182,7 @@ void transition() {
   tint+=4;
   if (tint >255) {
     fill(255, 255, 255, 255);
-    next_level(); 
+    next_level();
     tint=0;
   }
 }
