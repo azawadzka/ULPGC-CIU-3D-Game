@@ -96,12 +96,12 @@ void mouseClicked() {
 void keyPressed() {
   if (status) {
 
-    if (keyCode==UP) {
+    if (keyCode==UP && !menu.get_controllers_display() && !menu.get_credits_display()) {
       menu.options--;
       if (menu.options<0)menu.options=2;
     }
 
-    if (keyCode==DOWN) {
+    if (keyCode==DOWN && !menu.get_controllers_display() && !menu.get_credits_display()) {
       menu.options++;
       if (menu.options>2)menu.options=0;
     }

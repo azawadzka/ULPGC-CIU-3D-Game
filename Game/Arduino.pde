@@ -136,15 +136,15 @@ public class Arduino {
   }
 
   void Joystick_Y_axis_event() {
-    if (status) {
+    if (status && !menu.get_controllers_display() && !menu.get_credits_display()) {
 
       //DOWN
       if (buffer[0]<514) {
-        menu.options++;
-        if (menu.options>2)menu.options=0;
-      } else if (buffer[0]>525) {
         menu.options--;
         if (menu.options<0)menu.options=2;
+      } else if (buffer[0]>525) {
+        menu.options++;
+        if (menu.options>2)menu.options=0;
       }
     }
   }
