@@ -2,9 +2,9 @@
 Board
 
 This class implements the placement of figures on a chessboard-like structure where an obstacle or the player can be placed
-on spots and be recognised as a collisible object by other elements. It uses abstract coordinates on board P, R.  
+on spots and be recognised as a collisible object by other elements. It uses abstract coordinates on board P, R.
 
-It does: 
+It does:
   - define board sizes size_p and size_r in constructor
   - have public methods put_on_board and remove_from_board (boolean to confirm if the action could be performed)
   - detect collisions
@@ -19,20 +19,20 @@ class Board {
   private Obstacle[][] board;
   
   int door_p, door_r;
-  
+
   public Board(int size_p, int size_r, int door_p, int door_r) {
     this.size_p = size_p;
     this.size_r = size_r;
     this.door_p = door_p;
     this.door_r = door_r;
-    
+
     board = new Obstacle[size_p][size_r];
   }
-  
+
   public boolean is_free(int p, int r) {
     return check_if_free(p, r);
   }
-  
+
   public boolean put_on_board(Obstacle element, int p, int r) {
     if (check_if_free(p, r)) {
       board[p][r] = element;
@@ -41,7 +41,7 @@ class Board {
     print("Object could not be placed on board!");
     return false;
   }
-  
+
   public boolean put_on_board(Obstacle element, int p, int r, int element_size_p, int element_size_r) {
     // check if all requested fields are free
     for (int i = p; i < p + element_size_p; i++) {
@@ -65,7 +65,7 @@ class Board {
     }
     return true;
   }
-  
+
   private boolean check_if_free(int p, int r) {
     if (p < 0 || p >= size_p) return false;
     if (r < 0 || r >= size_r) return false;
@@ -87,7 +87,7 @@ class Board {
   */
   public void debug_show_elements_on_board() {
     PShape shape = createShape(BOX, Room.TILE);
-    shape.setFill(color(255,0,0));
+    shape.setFill(color(255, 0, 0));
     shape.translate(0, Room.TILE*3/7, 0);
     for (int i = 0; i < size_p; i++) {
       for (int j = 0; j < size_r; j++) {

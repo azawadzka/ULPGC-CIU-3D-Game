@@ -8,9 +8,9 @@ class Obstacle {
   private String name;
   private String requirement;
 
-  
+
   private PImage icon;
-  
+
 
   public float offset_x, offset_y, offset_z;
 
@@ -19,7 +19,7 @@ class Obstacle {
   }
 
 
-  public Obstacle(PShape s, boolean pick, PImage icon,boolean unlockable,String name,String requirement) {
+  public Obstacle(PShape s, boolean pick, PImage icon, boolean unlockable, String name, String requirement) {
     this.shape = s;
     this.pickable = pick;
     this.icon = icon;
@@ -39,34 +39,33 @@ class Obstacle {
     this.offset_y = offset_y;
     this.offset_z = offset_z;
   }
-  
-  public void setPickable(boolean v){
+
+  public void setPickable(boolean v) {
     this.pickable = v;
   }
-  
-  public boolean getPickable(){
+
+  public boolean getPickable() {
     return this.pickable;
   }
-  
-  public PImage getIcon(){
+
+  public PImage getIcon() {
     return icon;
   }
-  
 
-  public boolean isUnlockable(){
+
+  public boolean isUnlockable() {
     return this.unlockable;
   }
-  
-    public void setUnlockable(boolean change){
+
+  public void setUnlockable(boolean change) {
     unlockable = change;
   }
-  
-  public String getRequirement(){
+
+  public String getRequirement() {
     return requirement;
   }
-  
-  public String getNombre(){
+
+  public String getNombre() {
     return name;
   }
-
 }
