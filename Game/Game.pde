@@ -4,6 +4,7 @@ Capture cam;
 Board board;
 Room room;
 Player player;
+Monster monster;
 Camera camera;
 Arrow arrow;
 Menu menu;
@@ -19,6 +20,7 @@ boolean status = true;  //which part is the player
 
 BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
+MonsterFactory monsterFactory;
 
 int level = 0;
 
@@ -26,6 +28,7 @@ void setup() {
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
+  monsterFactory = new MonsterFactory();
   menu = new Menu();
   next_level();
   smooth(8);
@@ -44,6 +47,10 @@ void draw() {
     directionalLight(100, 100, 100, 0, 1, 0); // dim lights
     camera.cam();
     player.move();
+    monster.move();
+    if (!monster.is_moving() || !player.is_moving()) { 
+      if (check_collision_player_monster()) do_game_over(); // monster or player finished moving, check if monster colided with player
+    }
     room.display();
     if (room.check_ending_level()) {
       transition();
@@ -73,24 +80,39 @@ void next_level() {
   level++;
   board = boardFactory.create_board_for_level(level);
   if (board == null) {
-    print("game finished. You won");
+    print("Game finished. You won");
     exit();
     return;
   }
   player = new Player(new Inventory(), board);
-  room = new Room(board, player);
+  monster = monsterFactory.create_monster_for_level(level, board);
+  room = new Room(board, player, monster);
   camera = new Camera(player);
   arrow = new Arrow(player);
 }
 
-void mouseClicked() {
-  if (true) {
-    if (player.request_move()) {
-      arrow.cancel_false_click();
-    } else {
-      arrow.set_false_click();
-    }
+private void try_moving_player() {
+  if (player.request_move()) {
+    arrow.cancel_false_click();
+    if (!check_collision_player_monster()) monster.request_move();
+  } else {
+    arrow.set_false_click();
   }
+}
+
+private boolean check_collision_player_monster() {
+  //println("P_P: " + player.getP() + " P_R: " + player.getR());
+  //println("M_P: " + monster.getP() + " M_R: " + monster.getR());
+  return (player.getR() == monster.getR() && player.getP() == monster.getP());
+}
+
+private void do_game_over() {
+  print("The monster got you. You lose");
+  exit();
+}
+
+void mouseClicked() {
+  try_moving_player();
 }
 
 void keyPressed() {
@@ -167,12 +189,12 @@ void keyPressed() {
       try {
         if (cam == null) cam = new Capture(this, 640, 480);
         cam.start();
-      } catch (RuntimeException ex) {
+      } 
+      catch (RuntimeException ex) {
         cam_on = false;
         println("Tried to activate camera but there are no devices available!");
       }
-    }
-    else cam.stop();
+    } else cam.stop();
   }
 }
 
