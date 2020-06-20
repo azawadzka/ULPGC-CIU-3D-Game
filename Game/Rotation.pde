@@ -1,6 +1,7 @@
 public float ROTATION; // [-PI, PI]
 public int joystick_curvature = 0;  
 private float joystick_rotation_change = 0.05;
+private int x_axis_last_value = 0;
 
 public void updateRotation() {
   switch (control) {

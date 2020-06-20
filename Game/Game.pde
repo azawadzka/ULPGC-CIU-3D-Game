@@ -11,7 +11,7 @@ Menu menu;
 Arduino arduino;
 
 //COSAS PARA LECTOR SERIAL
-//int [] buffer = new int[3] ;
+int [] buffer = new int[3] ;
 Serial arduino_Serial; //Conexion al Serial
 int control = 1;  //Para cambiar el control remoto.
 int tint = 0;  // Opacity for transition scene
@@ -25,7 +25,6 @@ ObstacleFactory obstacleFactory;
 MonsterFactory monsterFactory;
 
 int level = 0;
-boolean cam_on = false;
 
 void setup() {
   size(1000, 700, P3D);
@@ -76,11 +75,6 @@ void draw() {
   }
 }
 
-  if (cam_on && cam.available()) {
-    cam.read();
-    image(cam, 0, 0, 320, 240);
-  }
-}
 
 void check_if_next_level() {
   if (room.check_ending_level()) {
@@ -89,7 +83,9 @@ void check_if_next_level() {
     fill(255, 255, 255, 255);
     tint = 0;
   }
-public void debug_mode() {
+}
+
+void debug_mode() {
   lights();
   //board.debug_show_elements_on_board();
 }
@@ -258,11 +254,11 @@ void leftButtonClicked() {
     Obstacle item = room.getItem();
     item.setPickable(false);
     player.inventory.addItem(item);
-    board.free_element(room.item_p, room.item_r);
+    board.remove_from_board(room.item_p, room.item_r);
   }
 
   if (room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-    board.free_element(room.item_p, room.item_r);    
+    board.remove_from_board(room.item_p, room.item_r);    
     player.inventory.removeItem(room.getItem());
     player.inventory.display();
   }
