@@ -1,17 +1,17 @@
 /*
 Room
-
-This class draws the Board that has been passed as an argument of its constructor. It stores all data that is 
-characteristic to the instance of chamber. 
-
-It does: 
-  - store all information that is necessery to draw a chamber, that is: the board (sizes, objects, etc.) and all 
-    visual data (pixel sizes, brushes and textures)
-  - perform the drawing
-It doesn't:
-  - do any logical operations like putting on board, detecting collisions, interact with objects
-  - draw the user interface
-*/
+ 
+ This class draws the Board that has been passed as an argument of its constructor. It stores all data that is 
+ characteristic to the instance of chamber. 
+ 
+ It does: 
+ - store all information that is necessery to draw a chamber, that is: the board (sizes, objects, etc.) and all 
+ visual data (pixel sizes, brushes and textures)
+ - perform the drawing
+ It doesn't:
+ - do any logical operations like putting on board, detecting collisions, interact with objects
+ - draw the user interface
+ */
 
 class Room {
 
@@ -21,6 +21,7 @@ class Room {
   Board board;
 
   Player player;  //Get player position
+  Monster monster;  //Get player position
 
   Obstacle item;  //Get the current interactable item
   int item_p; //current interactable item position i
@@ -33,9 +34,10 @@ class Room {
   float h = Room.ROOM_HEIGHT; // alias for readibility of vertex creation code where all parameters are single letters
 
 
-  public Room(Board board, Player player) {
+  public Room(Board board, Player player, Monster monster) {
     this.board = board;
     this.player = player;
+    this.monster = monster;
     this.bp = board.size_p * TILE;
     this.br = board.size_r * TILE;
     this.tp = board.size_p;
@@ -56,6 +58,7 @@ class Room {
     display_walls();
     display_ceiling();
     display_figures();
+    if(monster != null) display_monster();
     display_and_update_current_item();
     check_ending_level();
   }
@@ -134,6 +137,14 @@ class Room {
     endShape();
   }
 
+  private void display_monster() {
+    pushMatrix();
+    translate(monster.p * Room.TILE, 0, monster.r * Room.TILE); // I used (monster.x , 0, monster.z) before to have the movement animation but the monster was weirdly misplaced
+    translate(monster.offset_x, monster.offset_y, monster.offset_z);
+    shape(monster.model);
+    popMatrix();
+  }
+
   private void display_figures() {
     for (int i = 0; i < board.size_p; i++) {
       for (int j = 0; j < board.size_r; j++) {
@@ -148,7 +159,7 @@ class Room {
     }
   }
 
-//-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
+  //-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
   private void display_and_update_current_item() {
     for (int i = 0; i < board.size_p; i++) {
       for (int j = 0; j < board.size_p; j++) {

@@ -3,10 +3,10 @@ class Player {
   public static final int MOVE_TIME = 30;
 
   Board board;
-  
-//-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
+
+  //-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
   Inventory inventory;
-//-------------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------------
 
   private float x, z;
   int p, r; //coordinates on the board
@@ -21,15 +21,15 @@ class Player {
     this.p=0; 
     this.r=0;
   }
-  
-//-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
+
+  //-----------------------------------------------------PLEASE MOVE IT TO ANOTHER CLASS-------------------------------
   private boolean owns_item_to_unlock(String neededItemName) {
     if (inventory.getItemByName(neededItemName) != null) {
       return true;
     }
     return false;
   }
-//-------------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------------
 
   public boolean request_move() {
     if (!ready_to_move()) return false;
@@ -51,6 +51,10 @@ class Player {
 
   private boolean ready_to_move() {
     return timer == 0;
+  }
+
+  public boolean is_moving() {
+    return timer != 0;
   }
 
   private void move() {

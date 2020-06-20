@@ -8,9 +8,7 @@ class Obstacle {
   private String name;
   private String requirement;
 
-
   private PImage icon;
-
 
   public float offset_x, offset_y, offset_z;
 
