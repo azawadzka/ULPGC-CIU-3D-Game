@@ -10,7 +10,9 @@ Arrow arrow;
 Menu menu;
 Arduino arduino;
 
-Serial arduino_Serial;
+//COSAS PARA LECTOR SERIAL
+//int [] buffer = new int[3] ;
+Serial arduino_Serial; //Conexion al Serial
 int control = 1;  //Para cambiar el control remoto.
 int tint = 0;  // Opacity for transition scene
 
@@ -23,9 +25,12 @@ ObstacleFactory obstacleFactory;
 MonsterFactory monsterFactory;
 
 int level = 0;
+boolean cam_on = false;
 
 void setup() {
   size(1000, 700, P3D);
+  smooth(8);
+  
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
   monsterFactory = new MonsterFactory();
@@ -71,6 +76,19 @@ void draw() {
   }
 }
 
+  if (cam_on && cam.available()) {
+    cam.read();
+    image(cam, 0, 0, 320, 240);
+  }
+}
+
+void check_if_next_level() {
+  if (room.check_ending_level()) {
+    transition();
+  } else {
+    fill(255, 255, 255, 255);
+    tint = 0;
+  }
 public void debug_mode() {
   lights();
   //board.debug_show_elements_on_board();
@@ -149,13 +167,16 @@ void keyPressed() {
   } else {
     if (key == 'l') next_level();
 
+
+  // F - pick item
     if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
       Obstacle item = room.getItem();
       item.setPickable(false);
       player.inventory.addItem(item);
       board.remove_from_board(room.item_p, room.item_r);
     }
-
+    
+  // B - ???
     if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
       board.remove_from_board(room.item_p, room.item_r);
       player.inventory.removeItem(room.getItem());
@@ -201,14 +222,48 @@ void keyPressed() {
 void transition() {
   fill(0, 0, 0, tint);
   rect(0, 0, width, height);
-  tint+=4;
-  if (tint >255) {
+  tint += 4;
+  if (tint > 255) {
     fill(255, 255, 255, 255);
     next_level();
-    tint=0;
+    tint = 0;
   }
 }
 
-void serialEvent(Serial arduino_Serial) {
-  arduino.serial_Event_Manager(arduino_Serial);
+
+/*
+ * Serial port events
+ */
+ 
+void serialEvent(Serial arduinoSerial) {
+  arduinoSerial.bufferUntil('\n');
+  String aux = arduinoSerial.readStringUntil('\n'); //es necesario crear una variable auxiliar, lo explico en otro momento xD
+  if (aux != null) buffer = int(split(aux, "-"));
+  joystick_curvature = buffer[0];
+  if (buffer[1] == 1) rightButtonClicked();
+  if (buffer[2] == 1) leftButtonClicked();
+}
+
+void rightButtonClicked() {
+  if (player.request_move()) {
+    arrow.cancel_false_click();
+  } else {
+    arrow.set_false_click();
+  }
+}
+
+void leftButtonClicked() {
+  if (room.getItem() != null && room.getItem().getPickable()) {
+
+    Obstacle item = room.getItem();
+    item.setPickable(false);
+    player.inventory.addItem(item);
+    board.free_element(room.item_p, room.item_r);
+  }
+
+  if (room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
+    board.free_element(room.item_p, room.item_r);    
+    player.inventory.removeItem(room.getItem());
+    player.inventory.display();
+  }
 }
