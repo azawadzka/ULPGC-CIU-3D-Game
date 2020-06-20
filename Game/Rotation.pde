@@ -25,6 +25,7 @@ private float getRotationFromJoystick() {
   return (ROTATION + change + PI) % TWO_PI - PI; // make within range [-PI, PI] 
 }
 
+
 /*
 other sensors...
  */
@@ -46,4 +47,12 @@ public int[] getWalkingDirection() {
         mr = 1;
     }
     return new int[] {mp, mr};
+}
+
+void reset_X_axis(){
+  if (x_axis_last_value>1000) {
+    x_axis_last_value=0;
+  } else if (x_axis_last_value<0) {
+    x_axis_last_value=1000;
+  }
 }
