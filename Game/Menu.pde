@@ -1,10 +1,4 @@
-/*
-import ddf.minim.*;
- import ddf.minim.analysis.*;
- import ddf.minim.effects.*;
- import ddf.minim.signals.*;
- import ddf.minim.spi.*;
- import ddf.minim.ugens.*;*/
+
 
 import processing.sound.*;
 
@@ -37,7 +31,7 @@ class Menu {
 
     textAlign(CENTER);
     textFont(fontTerrorTitle);
-    fill(255, 0, 0);
+    fill(255, 0, 0, tint);
     text("THE ROOM", width/2, height/2-200);
     textFont(fontTerror);
     text("Play", width/2, height/2+100);

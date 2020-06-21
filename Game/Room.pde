@@ -234,7 +234,7 @@ class Room {
     fill(255, 255, 0);
     text("F", width/2-150+textWidth("Press "), height/2+100);
     fill(128);
-    text(" to pay respects", width/2-150+textWidth("Press F"), height/2+100);
+    text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
     fill(255);
     hint(ENABLE_DEPTH_TEST);
   }
@@ -248,16 +248,16 @@ class Room {
     fill(128);
 
     if (player.owns_item_to_unlock(board.board[item_p][item_r].getRequirement())) {
-      text("Pulsa ", width/2-150, height/2+100);
+      text("Press ", width/2-150, height/2+100);
       fill(255, 255, 0);
       text("B", width/2-150+textWidth("Pulsa "), height/2+100);
       fill(128);
-      text(" para romper la pared", width/2-150+textWidth("Pulsa B"), height/2+100);
+      text(" to unlock the path", width/2-150+textWidth("Pulsa B"), height/2+100);
       fill(255);
     } else {
-      text("Necesitas el objeto ", width/2-150, height/2+100);
+      text("You need ", width/2-150, height/2+100);
       fill(0, 0, 255);
-      text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("Necesitas el objeto "), height/2+100);
+      text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
       fill(255);
     }
     hint(ENABLE_DEPTH_TEST);
@@ -281,5 +281,7 @@ class Room {
   public Obstacle getItem() {
     return item;
   }
+
+  
 }
 //------------------------------------------------------------------------------------------------------------------------------

@@ -26,10 +26,28 @@ class BoardFactory {
   }
 
   private Board create_board2() {
-    Board board = new Board(4, 4, 3, 3);
+    Board board = new Board(9, 9, 8, 4);
 
-    board.put_on_board(obstacleFactory.createWall(), 1, 1);
+    board.put_on_board(obstacleFactory.createWall(), 8, 7);
+    board.put_on_board(obstacleFactory.createWall(), 7, 7);
+    board.put_on_board(obstacleFactory.createWall(), 7, 6);
+    board.put_on_board(obstacleFactory.createWall(), 6, 6);
+    board.put_on_board(obstacleFactory.createWall(), 7, 5);
+    board.put_on_board(obstacleFactory.createWall(), 5, 5);
+    board.put_on_board(obstacleFactory.createWall(), 5, 3);
+    board.put_on_board(obstacleFactory.createWall(), 7, 3);
+    board.put_on_board(obstacleFactory.createWall(), 6, 2);
+    board.put_on_board(obstacleFactory.createWall(), 7, 2);
+    board.put_on_board(obstacleFactory.createWall(), 7, 1);
+    board.put_on_board(obstacleFactory.createWall(), 8, 1);
+    board.put_on_board(obstacleFactory.pot(), 4, 7);
+    board.put_on_board(obstacleFactory.pot(), 2, 6);
     board.put_on_board(obstacleFactory.pot(), 2, 2);
+    board.put_on_board(obstacleFactory.pot(), 4, 1);
+    board.put_on_board(obstacleFactory.key(), 8, 0);
+    board.put_on_board(obstacleFactory.flamethrower(), 8, 8);
+    board.put_on_board(obstacleFactory.door(), 6, 4);
+    board.put_on_board(obstacleFactory.spider(), 4, 4);
     return board;
   }
 
@@ -37,15 +55,14 @@ class BoardFactory {
     Board board = null;
 
     switch(level) {
-      case 1:
-        board = create_board1();
-        break;
-      case 2:
-        board = create_board2();
-        break;
+    case 1:
+      board = create_board1();
+      break;
+    case 2:
+      board = create_board2();
+      break;
     }
 
     return board;
   }
-
 }

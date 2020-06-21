@@ -63,7 +63,7 @@ class Obstacle {
     return requirement;
   }
 
-  public String getNombre() {
+  public String get_name() {
     return name;
   }
 }

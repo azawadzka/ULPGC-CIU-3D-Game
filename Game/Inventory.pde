@@ -15,7 +15,7 @@ class Inventory {
 
   public Obstacle getItemByName(String itemName) {
     for (int i = 0; i < items.size(); i++) {
-      if (items.get(i).getNombre() == itemName) {
+      if (items.get(i).get_name() == itemName) {
         return items.get(i);
       }
     }
@@ -28,10 +28,13 @@ class Inventory {
 
   public void removeItem(Obstacle item) {
     for (int i = 0; i < items.size(); i++) {
-      if (items.get(i).getNombre() == item.getRequirement()) {
+      if (items.get(i).get_name() == item.getRequirement()) {
         items.remove(i);
         break;
       }
     }
   }
+  
+  //public ArrayList<Obstacle> get_list(){ return items;}
+  
 }
