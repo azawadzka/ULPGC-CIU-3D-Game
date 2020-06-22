@@ -33,6 +33,7 @@ int level = 0;
 boolean gameover = false;
 
 void setup() {
+  surface.setTitle("The Room");
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
