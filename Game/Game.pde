@@ -14,7 +14,7 @@ Arduino arduino;
 SoundFile gameplay;
 SoundFile steps;
 
-
+private FX fx;
 
 Serial arduino_Serial;
 int control = 1;  //Para cambiar el control remoto.
@@ -30,22 +30,25 @@ MonsterFactory monsterFactory;
 
 int level = 0;
 
+boolean gameover = false;
+
 void setup() {
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
   monsterFactory = new MonsterFactory();
-  
+
   gameplay = new SoundFile(this, "resources/gameplay/background music.mp3");
   steps = new SoundFile(this, "resources/gameplay/steps.wav");
-  
+
   menu = new Menu();
   next_level();
   smooth(8);
   //noCursor();
+  fx = new FX(loadShader("resources/shader.glsl"));
 }
 
-void draw() {  
+void draw() {
   if (status) {
     menu.display();
   } else {
@@ -57,28 +60,44 @@ void draw() {
 
     directionalLight(100, 100, 100, 0, 1, 0); // dim lights
     camera.cam();
-    player.move();
-    monster.move();
-    if (!monster.is_moving() || !player.is_moving()) { 
-      if (check_collision_player_monster()) do_game_over(); // monster or player finished moving, check if monster colided with player
+    if (!gameover) {
+      player.move();
+      monster.move();
+      if (!monster.is_moving() || !player.is_moving()) { 
+        if (check_collision_player_monster()) do_game_over(); // monster or player finished moving, check if monster colided with player
+      }
     }
     room.display();
-    if (room.check_ending_level()) {
-      transition();
-    } else {
-      fill(255, 255, 255, 255);
-      tint=0;
-    }
-    // board.debug_show_elements_on_board();
 
-    hint(DISABLE_DEPTH_TEST);
-    arrow.display();
-    player.inventory.display();
-
-    if (cam_on && cam.available()) {
-      cam.read();
-      image(cam, 0, 0, 320, 240);
+    if (gameover) {
+      fx.apply_game_over_shader();
+      if (fx.has_gameover_finished()) {
+        print("Gameover finished\n");
+        exit();
+      }
     }
+
+    if (!gameover) {
+      if (room.check_ending_level()) {
+        transition();
+      } else {
+        fill(255, 255, 255, 255);
+        tint=0;
+      }
+
+      hint(DISABLE_DEPTH_TEST);
+      arrow.display();
+      player.inventory.display();
+    }
+
+    display_player_cam();
+  }
+}
+
+private void display_player_cam() {
+  if (cam_on && cam.available()) {
+    cam.read();
+    image(cam, 0, 0, 320, 240);
   }
 }
 
@@ -91,7 +110,7 @@ void next_level() {
   level++;
   board = boardFactory.create_board_for_level(level);
   if (board == null) {
-    print("Game finished. You won");
+    print("Game finished. You won\n");
     exit();
     return;
   }
@@ -113,23 +132,14 @@ private void try_moving_player() {
 }
 
 private boolean check_collision_player_monster() {
-  //println("P_P: " + player.getP() + " P_R: " + player.getR());
-  //println("M_P: " + monster.getP() + " M_R: " + monster.getR());
   return (player.getR() == monster.getR() && player.getP() == monster.getP());
 }
 
 private void do_game_over() {
-  print("The monster got you. You lose");
-  exit();
+  print("The monster got you. You lose\n");
+  gameover = true;
+  fx.start_game_over_shader();
 }
-
-
-/*private boolean set_shader() {
- 
- for (int i = 0; i < player.inventory.get_list().size(); i++) {
- }
- }*/
-
 
 void mouseClicked() {
   try_moving_player();
