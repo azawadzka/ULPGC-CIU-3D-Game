@@ -65,6 +65,8 @@ class Player {
     }
   }
 
+
+
   public int getP() {
     return p;
   }
@@ -72,4 +74,6 @@ class Player {
   public int getR() {
     return r;
   }
+  
+  
 }

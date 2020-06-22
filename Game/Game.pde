@@ -1,4 +1,5 @@
 import processing.video.*;
+import processing.sound.*;
 
 Capture cam;
 Board board;
@@ -10,9 +11,12 @@ Arrow arrow;
 Menu menu;
 Arduino arduino;
 
-//COSAS PARA LECTOR SERIAL
-int [] buffer = new int[3] ;
-Serial arduino_Serial; //Conexion al Serial
+SoundFile gameplay;
+SoundFile steps;
+
+
+
+Serial arduino_Serial;
 int control = 1;  //Para cambiar el control remoto.
 int tint = 0;  // Opacity for transition scene
 
@@ -28,11 +32,13 @@ int level = 0;
 
 void setup() {
   size(1000, 700, P3D);
-  smooth(8);
-  
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
   monsterFactory = new MonsterFactory();
+  
+  gameplay = new SoundFile(this, "resources/gameplay/background music.mp3");
+  steps = new SoundFile(this, "resources/gameplay/steps.wav");
+  
   menu = new Menu();
   next_level();
   smooth(8);
@@ -43,6 +49,7 @@ void draw() {
   if (status) {
     menu.display();
   } else {
+    if (!gameplay.isPlaying()) gameplay.play();
     updateRotation();
 
     hint(ENABLE_DEPTH_TEST);
@@ -75,17 +82,7 @@ void draw() {
   }
 }
 
-
-void check_if_next_level() {
-  if (room.check_ending_level()) {
-    transition();
-  } else {
-    fill(255, 255, 255, 255);
-    tint = 0;
-  }
-}
-
-void debug_mode() {
+public void debug_mode() {
   lights();
   //board.debug_show_elements_on_board();
 }
@@ -108,6 +105,7 @@ void next_level() {
 private void try_moving_player() {
   if (player.request_move()) {
     arrow.cancel_false_click();
+    steps.play();
     if (!check_collision_player_monster()) monster.request_move();
   } else {
     arrow.set_false_click();
@@ -124,6 +122,14 @@ private void do_game_over() {
   print("The monster got you. You lose");
   exit();
 }
+
+
+/*private boolean set_shader() {
+ 
+ for (int i = 0; i < player.inventory.get_list().size(); i++) {
+ }
+ }*/
+
 
 void mouseClicked() {
   try_moving_player();
@@ -163,16 +169,13 @@ void keyPressed() {
   } else {
     if (key == 'l') next_level();
 
-
-  // F - pick item
     if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
       Obstacle item = room.getItem();
       item.setPickable(false);
       player.inventory.addItem(item);
       board.remove_from_board(room.item_p, room.item_r);
     }
-    
-  // B - ???
+
     if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
       board.remove_from_board(room.item_p, room.item_r);
       player.inventory.removeItem(room.getItem());
@@ -218,48 +221,14 @@ void keyPressed() {
 void transition() {
   fill(0, 0, 0, tint);
   rect(0, 0, width, height);
-  tint += 4;
-  if (tint > 255) {
+  tint+=4;
+  if (tint >255) {
     fill(255, 255, 255, 255);
     next_level();
-    tint = 0;
+    tint=0;
   }
 }
 
-
-/*
- * Serial port events
- */
- 
-void serialEvent(Serial arduinoSerial) {
-  arduinoSerial.bufferUntil('\n');
-  String aux = arduinoSerial.readStringUntil('\n'); //es necesario crear una variable auxiliar, lo explico en otro momento xD
-  if (aux != null) buffer = int(split(aux, "-"));
-  joystick_curvature = buffer[0];
-  if (buffer[1] == 1) rightButtonClicked();
-  if (buffer[2] == 1) leftButtonClicked();
-}
-
-void rightButtonClicked() {
-  if (player.request_move()) {
-    arrow.cancel_false_click();
-  } else {
-    arrow.set_false_click();
-  }
-}
-
-void leftButtonClicked() {
-  if (room.getItem() != null && room.getItem().getPickable()) {
-
-    Obstacle item = room.getItem();
-    item.setPickable(false);
-    player.inventory.addItem(item);
-    board.remove_from_board(room.item_p, room.item_r);
-  }
-
-  if (room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-    board.remove_from_board(room.item_p, room.item_r);    
-    player.inventory.removeItem(room.getItem());
-    player.inventory.display();
-  }
+void serialEvent(Serial arduino_Serial) {
+  arduino.serial_Event_Manager(arduino_Serial);
 }

@@ -11,14 +11,14 @@ class ObstacleFactory {
   Obstacle bomb() {
     PShape bombModel = loadShape("resources/bomb/model.obj");
     bombModel.scale(25, -25, 25);
-    Obstacle bombObstacle = new Obstacle(bombModel, true, loadImage("resources/bomb/bomb.png"), false, "Bomba", "");
+    Obstacle bombObstacle = new Obstacle(bombModel, true, loadImage("resources/bomb/bomb.png"), false, "Bomb", "");
     bombObstacle.set_offset(Room.TILE/2, 0, Room.TILE/2); // to center object on tile
     return bombObstacle;
   }
 
   Obstacle destructiveWall() {    
     fill(255, 0, 0);
-    Obstacle wall = new Obstacle(createShape(BOX, Room.TILE, Room.ROOM_HEIGHT, Room.TILE), false, null, true, "", "Bomba");
+    Obstacle wall = new Obstacle(createShape(BOX, Room.TILE, Room.ROOM_HEIGHT, Room.TILE), false, null, true, "", "Bomb");
     fill(255);
     wall.set_offset(Room.TILE/2, Room.ROOM_HEIGHT/2, Room.TILE/2); // to center wall on tile
 
@@ -26,10 +26,44 @@ class ObstacleFactory {
   }
 
 
-  Obstacle pot() {
+Obstacle pot() {
     PShape model = loadShape("resources/pot/pot.obj");
     model.scale(80, -80, 80);
-    Obstacle obstacle = new Obstacle(model, true, loadImage("resources/pot/pot.png"), false, "Jarrón", "");
+    Obstacle obstacle = new Obstacle(model, false, loadImage("resources/pot/pot.png"), false, "pot", "");
+
+    obstacle.set_offset(Room.TILE/2, -20, Room.TILE/2); // to center object on tile
+    return obstacle;
+  }
+
+  Obstacle key() {
+    PShape model = loadShape("resources/key/Key.obj");
+    model.scale(80, -80, 80);
+    Obstacle obstacle = new Obstacle(model, true, loadImage("resources/key/key.png"), false, "Key", "");
+    model.rotateY(1.6);
+    obstacle.set_offset(Room.TILE/2, -20, Room.TILE/2); // to center object on tile
+    return obstacle;
+  }
+  Obstacle door() {
+    PShape model = loadShape("resources/door/Door.obj");
+    model.scale(15, -10, 10);
+    model.rotateY(1.6);
+    Obstacle obstacle = new Obstacle(model, false, null, true, "", "Key");
+
+    obstacle.set_offset(0, 0, Room.TILE/2); // to center object on tile
+    return obstacle;
+  }
+  Obstacle spider() {
+    PShape model = loadShape("resources/spider/skSpiderLargeMesh.obj");
+    model.scale(3, -3, 3);
+    Obstacle obstacle = new Obstacle(model, false, null, true, "", "Flamethrower");
+
+    obstacle.set_offset(Room.TILE/2, -20, Room.TILE/2); // to center object on tile
+    return obstacle;
+  }
+  Obstacle flamethrower() {
+    PShape model = loadShape("resources/flamethrower/Flamethrower.obj");
+    model.scale(1, -1, 1);
+    Obstacle obstacle = new Obstacle(model, true, loadImage("resources/flamethrower/flame thrower.png"), false, "Flamethrower", "");
 
     obstacle.set_offset(Room.TILE/2, -20, Room.TILE/2); // to center object on tile
     return obstacle;

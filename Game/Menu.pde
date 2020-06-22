@@ -1,10 +1,4 @@
-/*
-import ddf.minim.*;
- import ddf.minim.analysis.*;
- import ddf.minim.effects.*;
- import ddf.minim.signals.*;
- import ddf.minim.spi.*;
- import ddf.minim.ugens.*;*/
+
 
 import processing.sound.*;
 
@@ -37,7 +31,7 @@ class Menu {
 
     textAlign(CENTER);
     textFont(fontTerrorTitle);
-    fill(255, 0, 0);
+    fill(255, 0, 0, tint);
     text("THE ROOM", width/2, height/2-200);
     textFont(fontTerror);
     text("Play", width/2, height/2+100);
@@ -79,14 +73,13 @@ class Menu {
   public void credits() {
     background(0);
     textAlign(CENTER);
+    String text = "MADE BY\n\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ\nRUBEN GARCIA QUINTANA\n\n";
     if (control==0) {
-      text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
-        "\nruben Garcia Quintana\nPRESS LEFT BUTTON TO BACK TO THE MENU", width/2, 200);
+      text += "PRESS LEFT BUTTON TO GO BACK TO THE MENU";
     } else {
-      text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
-        "\nruben Garcia Quintana\nPRESS ENTER TO BACK TO THE MENU", width/2, 200);
+      text += "PRESS ENTER TO GO BACK TO THE MENU";
     }
-
+    text(text, width/2, 200);
     textAlign(BASELINE);
   }
 

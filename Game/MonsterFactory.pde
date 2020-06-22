@@ -8,7 +8,7 @@ class MonsterFactory {
       monster = create_ant(board, 6, 4);
       break;
     case 2:
-      monster = create_ant(board, 2, 1);
+      monster = create_ant(board, 4, 3);
       break;
     }
 
