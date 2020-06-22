@@ -13,6 +13,7 @@ Arduino arduino;
 
 SoundFile gameplay;
 SoundFile steps;
+SoundFile game_over_song;
 
 private FX fx;
 
@@ -20,9 +21,10 @@ Serial arduino_Serial;
 int control = 1;  //Para cambiar el control remoto.
 int tint = 0;  // Opacity for transition scene
 
-boolean debug = true;
+boolean debug = false;
 boolean cam_on = false;
 boolean status = true;  //which part is the player
+boolean game_over_screen = false;
 
 BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
@@ -33,7 +35,6 @@ int level = 0;
 boolean gameover = false;
 
 void setup() {
-  surface.setTitle("The Room");
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
@@ -41,6 +42,7 @@ void setup() {
 
   gameplay = new SoundFile(this, "resources/gameplay/background music.mp3");
   steps = new SoundFile(this, "resources/gameplay/steps.wav");
+  game_over_song = new SoundFile(this, "resources/gameplay/game_over.mp3");
 
   menu = new Menu();
   next_level();
@@ -50,7 +52,10 @@ void setup() {
 }
 
 void draw() {
-  if (status) {
+
+  if (game_over_screen) {
+    fx.gameover_screen();
+  } else if (status) {
     menu.display();
   } else {
     if (!gameplay.isPlaying()) gameplay.play();
@@ -72,9 +77,11 @@ void draw() {
 
     if (gameover) {
       fx.apply_game_over_shader();
+      gameplay.stop();
+      if(!game_over_song.isPlaying()) game_over_song.play();
       if (fx.has_gameover_finished()) {
-        print("Gameover finished\n");
-        exit();
+        game_over_screen = true;
+        resetShader();
       }
     }
 
@@ -123,12 +130,14 @@ void next_level() {
 }
 
 private void try_moving_player() {
-  if (player.request_move()) {
-    arrow.cancel_false_click();
-    steps.play();
-    if (!check_collision_player_monster()) monster.request_move();
-  } else {
-    arrow.set_false_click();
+  if (!status && !game_over_screen) {
+    if (player.request_move()) {
+      arrow.cancel_false_click();
+      steps.play();
+      if (!check_collision_player_monster()) monster.request_move();
+    } else {
+      arrow.set_false_click();
+    }
   }
 }
 
