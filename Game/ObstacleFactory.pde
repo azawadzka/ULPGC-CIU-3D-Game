@@ -23,7 +23,7 @@ class ObstacleFactory {
   Obstacle destructiveWall() {   
 
     PShape shape = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT, Room.TILE);
-    PImage tex = loadImage("resources/level" + 1 + "/wall_weak.png");
+    PImage tex = loadImage("resources/level" + 1 + "/wall_weak3.png");
     shape.setTexture(tex);
     Obstacle wall = new Obstacle(shape, false, null, true, "", "Bomb");
     wall.set_offset(Room.TILE/2, Room.ROOM_HEIGHT/2, Room.TILE/2); // to center wall on tile
