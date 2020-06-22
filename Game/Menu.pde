@@ -73,14 +73,13 @@ class Menu {
   public void credits() {
     background(0);
     textAlign(CENTER);
+    String text = "MADE BY\n\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ\nRUBEN GARCIA QUINTANA\n\n";
     if (control==0) {
-      text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
-        "\nruben Garcia Quintana\nPRESS LEFT BUTTON TO BACK TO THE MENU", width/2, 200);
+      text += "PRESS LEFT BUTTON TO GO BACK TO THE MENU";
     } else {
-      text("MADE BY\nANNA ZAWADZKA\nALEXANDER SOREMBA\nISMAEL AARAB UMPIERREZ"+
-        "\nruben Garcia Quintana\nPRESS ENTER TO BACK TO THE MENU", width/2, 200);
+      text += "PRESS ENTER TO GO BACK TO THE MENU";
     }
-
+    text(text, width/2, 200);
     textAlign(BASELINE);
   }
 
