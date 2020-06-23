@@ -9,6 +9,7 @@ Room room;
 Player player;
 Monster monster;
 Camera camera;
+Torch torch;
 Arrow arrow;
 Menu menu;
 Arduino arduino;
@@ -74,6 +75,7 @@ void draw() {
     if (debug) debug_mode();
     hint(ENABLE_DEPTH_TEST);
     game_layer.directionalLight(255, 255, 255, 0, 1, 0); // dim lights
+    torch.light();
     camera.cam();
     if (!gameover) {
       player.move();
@@ -140,6 +142,7 @@ void next_level() {
   monster = monsterFactory.create_monster_for_level(level, board);
   room = new Room(board, player, monster);
   camera = new Camera(player);
+  torch = new Torch(player);
   arrow = new Arrow(player);
 }
 

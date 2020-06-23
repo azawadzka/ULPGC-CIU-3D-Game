@@ -68,4 +68,13 @@ Obstacle pot() {
     obstacle.set_offset(Room.TILE/2, -20, Room.TILE/2); // to center object on tile
     return obstacle;
   }
+  
+  Obstacle venus() {
+    PShape model = loadShape("resources/venus/venus14k.obj");
+    model.scale(1.5, 1.5, 1.5);
+    Obstacle obstacle = new Obstacle(model, false, null, false, "Venus", "");
+
+    obstacle.set_offset(Room.TILE/2, 0, Room.TILE/2); // to center object on tile
+    return obstacle;
+  }
 }
