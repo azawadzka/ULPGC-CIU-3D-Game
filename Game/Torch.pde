@@ -11,28 +11,31 @@ class Torch {
   public void light() {
     float lookY = map(mouseY, 0, height, -300, 00);
     
-    float x = player.x;
+    float x = player.get_x();
     float y = lookY;
-    float z = player.z;
+    float z = player.get_z();
     
     float direction_x;
     float direction_z;
     
-    if (mouseX < width/2) {
-      direction_x = map(mouseX, 0, width/2, -1, 1);
+    if (ROTATION < 0) {
+      direction_x = map(ROTATION, -PI, 0, -1, 1);
     } else {
-      direction_x = map(mouseX, width/2, width, 1, -1);
+      direction_x = map(ROTATION, 0, PI, 1, -1);
     }
     
-    if (mouseX < width/4) {
-      direction_z = map(mouseX, 0, width/4, 0, -1);
-    } else if (mouseX < width*3/4) {
-      direction_z = map(mouseX, width/4, width*3/4, -1, 1);
+    if (ROTATION < -PI/2) {
+      direction_z = map(ROTATION, -PI, -PI/2, 0, -1);
+    } else if (ROTATION < PI/2) {
+      direction_z = map(ROTATION, -PI/2, PI/2, -1, 1);
     } else {
-      direction_z = map(mouseX, width*3/4, width, 1, 0);
+      direction_z = map(ROTATION, PI/2, PI, 1, 0);
     }
     
+    // 2 lights give better effect, whoever can do this better, go ahead
     game_layer.spotLight(255, 255, 200, x, y, z, direction_x, 0, direction_z, PI/12, concentration);
+    game_layer.spotLight(255, 255, 200, x, y, z, direction_x, 0, direction_z, PI/12, concentration);
+    
   }
   
 }
