@@ -35,6 +35,7 @@ int level = 0;
 boolean gameover = false;
 
 void setup() {
+  surface.setTitle("The Room");
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
@@ -64,7 +65,8 @@ void draw() {
     hint(ENABLE_DEPTH_TEST);
     if (debug) debug_mode();
 
-    directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+    lights();
+    // directionalLight(100, 100, 100, 0, 1, 0); // dim lights
     camera.cam();
     if (!gameover) {
       player.move();
@@ -78,7 +80,7 @@ void draw() {
     if (gameover) {
       fx.apply_game_over_shader();
       gameplay.stop();
-      if(!game_over_song.isPlaying()) game_over_song.play();
+      if (!game_over_song.isPlaying()) game_over_song.play();
       if (fx.has_gameover_finished()) {
         game_over_screen = true;
         resetShader();
