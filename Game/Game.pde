@@ -193,6 +193,7 @@ void keyPressed() {
         status=false;
         menu.intro.stop();
         textFont(createFont("SansSerif", 16));
+        tint(255);
         break;
       case 1:
         menu.set_controllers_display(!menu.get_controllers_display());
