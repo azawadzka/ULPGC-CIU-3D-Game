@@ -1,4 +1,5 @@
 public float ROTATION; // [-PI, PI]
+public float TORCH_VERTICAL_POINT; // [-300, 0]
 public int joystick_curvature = 0;  
 private float joystick_rotation_change = 0.05;
 private int x_axis_last_value = 0;
@@ -7,9 +8,11 @@ public void updateRotation() {
   switch (control) {
     case 0:
       ROTATION = getRotationFromJoystick();
+      TORCH_VERTICAL_POINT = get_torch_vertical_point_from_mouse();
       break;
     case 1:
       ROTATION = getRotationFromMouse();
+      TORCH_VERTICAL_POINT = get_torch_vertical_point_from_mouse(); //to be changed
       break; 
   }
 }
@@ -26,6 +29,9 @@ private float getRotationFromJoystick() {
   return (ROTATION + change + PI) % TWO_PI - PI; // make within range [-PI, PI] 
 }
 
+private float get_torch_vertical_point_from_mouse() {
+  return map(mouseY, 0, height, -300, 00);
+}
 
 /*
 other sensors...

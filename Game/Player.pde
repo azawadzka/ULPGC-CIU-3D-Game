@@ -75,5 +75,13 @@ class Player {
     return r;
   }
   
+  public float get_x() {
+    return this.x;
+  }
+  
+  public float get_z() {
+    return this.z;
+  }
+  
   
 }
