@@ -119,28 +119,28 @@ class Room {
           game_layer.endShape();    
       
           game_layer.beginShape();
-          game_layer.vertex(p * TILE, 0, j * TILE, 0, 0);
-          game_layer.vertex(p * TILE, h, j * TILE, 0, 1);
-          game_layer.vertex(p * TILE, h, (j+1) * TILE, 1, 1);
-          game_layer.vertex(p * TILE, 0, (j+1) * TILE, 1, 0);
+          game_layer.vertex(p * TILE, k * h_part, j * TILE, 0, 0);
+          game_layer.vertex(p * TILE, (k+1) * h_part, j * TILE, 0, 1);
+          game_layer.vertex(p * TILE, (k+1) * h_part, (j+1) * TILE, 1, 1);
+          game_layer.vertex(p * TILE, k * h_part, (j+1) * TILE, 1, 0);
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();  
           
           game_layer.beginShape();
-          game_layer.vertex((i+1) * TILE, 0, r * TILE, 0, 0);
-          game_layer.vertex((i+1) * TILE, h, r * TILE, 0, 1);
-          game_layer.vertex(i * TILE, h, r * TILE, 1, 1);
-          game_layer.vertex(i * TILE, 0, r * TILE, 1, 0);
+          game_layer.vertex((i+1) * TILE, k * h_part, r * TILE, 0, 0);
+          game_layer.vertex((i+1) * TILE, (k+1) * h_part, r * TILE, 0, 1);
+          game_layer.vertex(i * TILE, (k+1) * h_part, r * TILE, 1, 1);
+          game_layer.vertex(i * TILE, k * h_part, r * TILE, 1, 0);
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();
           
           game_layer.beginShape();
-          game_layer.vertex(0, 0, (j+1) * TILE, 0, 0);
-          game_layer.vertex(0, h, (j+1) * TILE, 0, 1);
-          game_layer.vertex(0, h, j * TILE, 1, 1);
-          game_layer.vertex(0, 0, j * TILE, 1, 0);
+          game_layer.vertex(0, k * h_part, (j+1) * TILE, 0, 0);
+          game_layer.vertex(0, (k+1) * h_part, (j+1) * TILE, 0, 1);
+          game_layer.vertex(0, (k+1) * h_part, j * TILE, 1, 1);
+          game_layer.vertex(0, k * h_part, j * TILE, 1, 0);
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();

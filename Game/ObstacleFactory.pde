@@ -4,7 +4,17 @@ class ObstacleFactory {
 
   Obstacle createWall() {
 
-    PShape shape = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT, Room.TILE);
+    PShape shape = createShape(GROUP);
+    shape.noStroke();
+    PShape s1 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
+    s1.translate(0, -Room.ROOM_HEIGHT / 3, 0);
+    shape.addChild(s1);
+    PShape s2 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
+    shape.addChild(s2);
+    PShape s3 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
+    s3.translate(0, Room.ROOM_HEIGHT / 3, 0);
+    shape.addChild(s3);
+    
     PImage tex = loadImage("resources/level" + 1 + "/wall.png");
     shape.setTexture(tex);
     Obstacle wall = new Obstacle(shape, false, null, false, "0", "0");
@@ -20,9 +30,19 @@ class ObstacleFactory {
     return bombObstacle;
   }
 
-  Obstacle destructiveWall() {   
-
-    PShape shape = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT, Room.TILE);
+  Obstacle destructiveWall() {
+    
+    PShape shape = createShape(GROUP);
+    shape.noStroke();
+    PShape s1 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
+    s1.translate(0, -Room.ROOM_HEIGHT / 3, 0);
+    shape.addChild(s1);
+    PShape s2 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
+    shape.addChild(s2);
+    PShape s3 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
+    s3.translate(0, Room.ROOM_HEIGHT / 3, 0);
+    shape.addChild(s3);
+    
     PImage tex = loadImage("resources/level" + 1 + "/wall_weak3.png");
     shape.setTexture(tex);
     Obstacle wall = new Obstacle(shape, false, null, true, "", "Bomb");
