@@ -9,10 +9,9 @@ class Torch {
   }
   
   public void light() {
-    float lookY = map(mouseY, 0, height, -300, 00);
     
     float x = player.get_x();
-    float y = lookY;
+    float y = TORCH_VERTICAL_POINT;
     float z = player.get_z();
     
     float direction_x;
