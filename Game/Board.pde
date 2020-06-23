@@ -92,10 +92,10 @@ class Board {
     for (int i = 0; i < size_p; i++) {
       for (int j = 0; j < size_r; j++) {
         if (board[i][j] != null) {
-          pushMatrix();
-          translate(i * Room.TILE + Room.TILE/2, 0, j * Room.TILE + Room.TILE/2);
-          shape(shape);
-          popMatrix();
+          game_layer.pushMatrix();
+          game_layer.translate(i * Room.TILE + Room.TILE/2, 0, j * Room.TILE + Room.TILE/2);
+          game_layer.shape(shape);
+          game_layer.popMatrix();
         }
       }
     }

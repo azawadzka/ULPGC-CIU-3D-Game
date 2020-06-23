@@ -35,13 +35,13 @@ class Arrow {
     float x = ARROW_DISTANCE_FROM_PLAYER * sin(PI/2) * cos(ROTATION);
     float z = ARROW_DISTANCE_FROM_PLAYER * sin(PI/2) * sin(ROTATION);
 
-    pushMatrix();
-    translate(player.x + x, ARROW_HEIGHT, player.z + z);
+    game_layer.pushMatrix();
+    game_layer.translate(player.x + x, ARROW_HEIGHT, player.z + z);
 
     float div = floor(ROTATION / (PI/2) + 0.5);
-    rotateY(-div * PI/2 + PI);
-    shape(arrow);
-    popMatrix();
+    game_layer.rotateY(-div * PI/2 + PI);
+    game_layer.shape(arrow);
+    game_layer.popMatrix();
   }
 
   public void set_false_click() {

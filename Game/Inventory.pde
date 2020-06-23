@@ -7,9 +7,8 @@ class Inventory {
   }
 
   public void display() {
-    camera();
     for (int i = 0; i < items.size(); i++) {
-      image(items.get(i).getIcon(), (1+i) * 100, height-100);
+      top_layer.image(items.get(i).getIcon(), (1+i) * 100, height-100);
     }
   }
 

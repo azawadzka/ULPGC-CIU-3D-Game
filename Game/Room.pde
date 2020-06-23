@@ -78,82 +78,82 @@ class Room {
 
   private void display_floor() {
     // PShape doesn't support texture wrap so manual vertex definition has been used
-    beginShape();
-    vertex(0, 0, 0, 0, 0);
-    vertex(0, 0, br, 0, tr);
-    vertex(bp, 0, br, tp, tr);
-    vertex(bp, 0, 0, tp, 0);
-    texture(tex_floor);
-    textureWrap(REPEAT);
-    endShape();
+    game_layer.beginShape();
+    game_layer.vertex(0, 0, 0, 0, 0);
+    game_layer.vertex(0, 0, br, 0, tr);
+    game_layer.vertex(bp, 0, br, tp, tr);
+    game_layer.vertex(bp, 0, 0, tp, 0);
+    game_layer.texture(tex_floor);
+    game_layer.textureWrap(REPEAT);
+    game_layer.endShape();
   }
 
   private void display_ceiling() {
-    beginShape();
-    vertex(0, h, 0, 0, 0);
-    vertex(0, h, br, 0, tr);
-    vertex(bp, h, br, tp, tr);
-    vertex(bp, h, 0, tp, 0);
-    texture(tex_ceiling);
-    textureWrap(REPEAT);
-    endShape();
+    game_layer.beginShape();
+    game_layer.vertex(0, h, 0, 0, 0);
+    game_layer.vertex(0, h, br, 0, tr);
+    game_layer.vertex(bp, h, br, tp, tr);
+    game_layer.vertex(bp, h, 0, tp, 0);
+    game_layer.texture(tex_ceiling);
+    game_layer.textureWrap(REPEAT);
+    game_layer.endShape();
   }
 
   private void display_walls() {
-    beginShape();
-    vertex(0, 0, 0, 0, 0);
-    vertex(0, h, 0, 0, 1);
-    vertex(bp, h, 0, tp, 1);
-    vertex(bp, 0, 0, tp, 0);
-    texture(tex_wall);
-    textureWrap(REPEAT);
-    endShape(); 
+    game_layer.beginShape();
+    game_layer.vertex(0, 0, 0, 0, 0);
+    game_layer.vertex(0, h, 0, 0, 1);
+    game_layer.vertex(bp, h, 0, tp, 1);
+    game_layer.vertex(bp, 0, 0, tp, 0);
+    game_layer.texture(tex_wall);
+    game_layer.textureWrap(REPEAT);
+    game_layer.endShape(); 
 
-    beginShape();
-    vertex(bp, 0, 0, 0, 0);
-    vertex(bp, h, 0, 0, 1);
-    vertex(bp, h, br, tr, 1);
-    vertex(bp, 0, br, tr, 0);
-    texture(tex_wall);
-    textureWrap(REPEAT);
-    endShape(); 
+    game_layer.beginShape();
+    game_layer.vertex(bp, 0, 0, 0, 0);
+    game_layer.vertex(bp, h, 0, 0, 1);
+    game_layer.vertex(bp, h, br, tr, 1);
+    game_layer.vertex(bp, 0, br, tr, 0);
+    game_layer.texture(tex_wall);
+    game_layer.textureWrap(REPEAT);
+    game_layer.endShape(); 
 
-    beginShape();
-    vertex(bp, 0, br, 0, 0);
-    vertex(bp, h, br, 0, 1);
-    vertex(0, h, br, tp, 1);
-    vertex(0, 0, br, tp, 0);
-    texture(tex_wall);
-    textureWrap(REPEAT);
-    endShape(); 
+    game_layer.beginShape();
+    game_layer.vertex(bp, 0, br, 0, 0);
+    game_layer.vertex(bp, h, br, 0, 1);
+    game_layer.vertex(0, h, br, tp, 1);
+    game_layer.vertex(0, 0, br, tp, 0);
+    game_layer.texture(tex_wall);
+    game_layer.textureWrap(REPEAT);
+    game_layer.endShape(); 
 
-    beginShape();
-    vertex(0, 0, br, 0, 0);
-    vertex(0, h, br, 0, 1);
-    vertex(0, h, 0, tr, 1);
-    vertex(0, 0, 0, tr, 0);
-    texture(tex_wall);
-    textureWrap(REPEAT);
-    endShape();
+    game_layer.beginShape();
+    game_layer.vertex(0, 0, br, 0, 0);
+    game_layer.vertex(0, h, br, 0, 1);
+    game_layer.vertex(0, h, 0, tr, 1);
+    game_layer.vertex(0, 0, 0, tr, 0);
+    game_layer.texture(tex_wall);
+    game_layer.textureWrap(REPEAT);
+    game_layer.endShape();
   }
 
   private void display_monster() {
-    pushMatrix();
-    translate(monster.p * Room.TILE, 0, monster.r * Room.TILE); // I used (monster.x , 0, monster.z) before to have the movement animation but the monster was weirdly misplaced
-    translate(monster.offset_x, monster.offset_y, monster.offset_z);
-    shape(monster.model);
-    popMatrix();
+    game_layer.pushMatrix();
+    game_layer.translate(monster.p * Room.TILE, 0, monster.r * Room.TILE); // I used (monster.x , 0, monster.z) before to have the movement animation but the monster was weirdly misplaced
+    game_layer.translate(monster.offset_x, monster.offset_y, monster.offset_z);
+    game_layer.shape(monster.model);
+    game_layer.popMatrix();
   }
 
   private void display_figures() {
     for (int i = 0; i < board.size_p; i++) {
       for (int j = 0; j < board.size_r; j++) {
         if (board.board[i][j] != null) {
-          pushMatrix();
-          translate(i * Room.TILE, 0, j * Room.TILE);
-          translate(board.board[i][j].offset_x, board.board[i][j].offset_y, board.board[i][j].offset_z);
-          shape(board.board[i][j].shape);
-          popMatrix();
+          game_layer.pushMatrix();
+          game_layer.translate(i * Room.TILE, 0, j * Room.TILE);
+          game_layer.translate(board.board[i][j].offset_x, board.board[i][j].offset_y, board.board[i][j].offset_z);
+          game_layer.shape(board.board[i][j].shape);
+          game_layer.popMatrix();
         }
       }
     }
@@ -224,43 +224,34 @@ class Room {
   }
 
   private void showText() {
-    hint(DISABLE_DEPTH_TEST);
+    top_layer.textSize(24);
+    top_layer.fill(128);
 
-    textSize(24);
-    camera();
-    fill(128);
-
-    text("Press ", width/2-150, height/2+100);
-    fill(255, 255, 0);
-    text("F", width/2-150+textWidth("Press "), height/2+100);
-    fill(128);
-    text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
-    fill(255);
-    hint(ENABLE_DEPTH_TEST);
+    top_layer.text("Press ", width/2-150, height/2+100);
+    top_layer.fill(255, 255, 0);
+    top_layer.text("F", width/2-150+textWidth("Press "), height/2+100);
+    top_layer.fill(128);
+    top_layer.text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
+    top_layer.fill(255);
   }
 
   private void showUnlockMessage() {
-
-    hint(DISABLE_DEPTH_TEST);
-
-    textSize(24);
-    camera();
-    fill(128);
+    top_layer.textSize(24);
+    top_layer.fill(128);
 
     if (player.owns_item_to_unlock(board.board[item_p][item_r].getRequirement())) {
-      text("Press ", width/2-150, height/2+100);
-      fill(255, 255, 0);
-      text("B", width/2-150+textWidth("Pulsa "), height/2+100);
-      fill(128);
-      text(" to unlock the path", width/2-150+textWidth("Pulsa B"), height/2+100);
-      fill(255);
+      top_layer.text("Press ", width/2-150, height/2+100);
+      top_layer.fill(255, 255, 0);
+      top_layer.text("B", width/2-150+textWidth("Pulsa "), height/2+100);
+      top_layer.fill(128);
+      top_layer.text(" to unlock the path", width/2-150+textWidth("Pulsa B"), height/2+100);
+      top_layer.fill(255);
     } else {
-      text("You need ", width/2-150, height/2+100);
-      fill(0, 0, 255);
-      text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
-      fill(255);
+      top_layer.text("You need ", width/2-150, height/2+100);
+      top_layer.fill(0, 0, 255);
+      top_layer.text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
+      top_layer.fill(255);
     }
-    hint(ENABLE_DEPTH_TEST);
   }
 
   private void update_item_info(int i, int j) {

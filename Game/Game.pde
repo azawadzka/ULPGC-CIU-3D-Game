@@ -1,6 +1,8 @@
 import processing.video.*;
 import processing.sound.*;
 
+PGraphics game_layer;
+PGraphics top_layer;
 Capture cam;
 Board board;
 Room room;
@@ -39,6 +41,9 @@ void setup() {
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
   monsterFactory = new MonsterFactory();
+  
+  game_layer = createGraphics(width, height, P3D);
+  top_layer = createGraphics(width, height);
 
   gameplay = new SoundFile(this, "resources/gameplay/background music.mp3");
   steps = new SoundFile(this, "resources/gameplay/steps.wav");
@@ -60,11 +65,15 @@ void draw() {
   } else {
     if (!gameplay.isPlaying()) gameplay.play();
     updateRotation();
-
-    hint(ENABLE_DEPTH_TEST);
+    
+    game_layer.beginDraw();
+    game_layer.clear();
+    top_layer.beginDraw();
+    top_layer.clear();
+    
     if (debug) debug_mode();
-
-    directionalLight(100, 100, 100, 0, 1, 0); // dim lights
+    hint(ENABLE_DEPTH_TEST);
+    game_layer.directionalLight(255, 255, 255, 0, 1, 0); // dim lights
     camera.cam();
     if (!gameover) {
       player.move();
@@ -89,8 +98,8 @@ void draw() {
       if (room.check_ending_level()) {
         transition();
       } else {
-        fill(255, 255, 255, 255);
-        tint=0;
+        game_layer.fill(255, 255, 255, 255);
+        tint = 0;
       }
 
       hint(DISABLE_DEPTH_TEST);
@@ -99,18 +108,23 @@ void draw() {
     }
 
     display_player_cam();
+    
+    game_layer.endDraw();
+    top_layer.endDraw();
+    image(game_layer, 0, 0);
+    image(top_layer, 0, 0);
   }
 }
 
 private void display_player_cam() {
   if (cam_on && cam.available()) {
     cam.read();
-    image(cam, 0, 0, 320, 240);
+    top_layer.image(cam, 0, 0, 320, 240);
   }
 }
 
 public void debug_mode() {
-  lights();
+  game_layer.lights();
   //board.debug_show_elements_on_board();
 }
 
@@ -229,23 +243,27 @@ void keyPressed() {
       try {
         if (cam == null) cam = new Capture(this, 640, 480);
         cam.start();
+        println("Camera on");
       } 
       catch (RuntimeException ex) {
         cam_on = false;
         println("Tried to activate camera but there are no devices available!");
       }
-    } else cam.stop();
+    } else  {
+      cam.stop();
+      println("Camera off");
+    }
   }
 }
 
 void transition() {
-  fill(0, 0, 0, tint);
-  rect(0, 0, width, height);
-  tint+=4;
-  if (tint >255) {
-    fill(255, 255, 255, 255);
+  game_layer.fill(0, 0, 0, tint);
+  game_layer.rect(0, 0, width, height);
+  tint += 4;
+  if (tint > 255) {
+    game_layer.fill(255, 255, 255, 255);
     next_level();
-    tint=0;
+    tint = 0;
   }
 }
 

@@ -13,6 +13,6 @@ class Camera {
     float x = view_length * sin(PI/2) * cos(ROTATION);
     float z = view_length * sin(PI/2) * sin(ROTATION);
     
-    camera(player.x, CAMERA_HEIGHT, player.z, x, CAMERA_HEIGHT, z, 0, 1, 0);
+    game_layer.camera(player.x, CAMERA_HEIGHT, player.z, x, CAMERA_HEIGHT, z, 0, 1, 0);
   }
 }
