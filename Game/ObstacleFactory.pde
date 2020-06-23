@@ -5,7 +5,6 @@ class ObstacleFactory {
   Obstacle createWall() {
 
     PShape shape = createShape(GROUP);
-    shape.noStroke();
     PShape s1 = createShape(BOX, Room.TILE, Room.ROOM_HEIGHT / 3, Room.TILE); 
     s1.translate(0, -Room.ROOM_HEIGHT / 3, 0);
     shape.addChild(s1);
