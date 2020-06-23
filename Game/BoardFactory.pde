@@ -21,7 +21,6 @@ class BoardFactory {
 
     board.put_on_board(obstacleFactory.bomb(), 7, 3);
     board.put_on_board(obstacleFactory.pot(), 2, 4);
-    board.put_on_board(obstacleFactory.venus(), 3, 0);
 
     return board;
   }
