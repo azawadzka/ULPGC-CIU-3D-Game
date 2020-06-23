@@ -29,19 +29,20 @@ class Room {
 
   PImage tex_floor, tex_wall, tex_ceiling, normal_tex_floor, normal_tex_wall, normal_tex_ceiling, debug_tex_floor, debug_tex_wall, debug_tex_ceiling;
 
-  float bp, br; // board sizes
-  float tp, tr; // floor texture proportion
+  int p, r; // board sizes
   float h = Room.ROOM_HEIGHT; // alias for readibility of vertex creation code where all parameters are single letters
+  int parts_wall; 
+  float h_part;
 
 
   public Room(Board board, Player player, Monster monster) {
     this.board = board;
     this.player = player;
     this.monster = monster;
-    this.bp = board.size_p * TILE;
-    this.br = board.size_r * TILE;
-    this.tp = board.size_p;
-    this.tr = board.size_r;
+    this.p = board.size_p;
+    this.r = board.size_r;
+    this.parts_wall = 3;
+    this.h_part = h / this.parts_wall;
 
     normal_tex_floor = loadImage("resources/level" + level + "/floor.png");
     normal_tex_wall = loadImage("resources/level" + level + "/wall.png");
@@ -54,6 +55,7 @@ class Room {
   }
 
   public void display() {
+    game_layer.noStroke();
     display_floor();
     display_walls();
     display_ceiling();
@@ -78,63 +80,73 @@ class Room {
 
   private void display_floor() {
     // PShape doesn't support texture wrap so manual vertex definition has been used
-    game_layer.beginShape();
-    game_layer.vertex(0, 0, 0, 0, 0);
-    game_layer.vertex(0, 0, br, 0, tr);
-    game_layer.vertex(bp, 0, br, tp, tr);
-    game_layer.vertex(bp, 0, 0, tp, 0);
-    game_layer.texture(tex_floor);
-    game_layer.textureWrap(REPEAT);
-    game_layer.endShape();
+    for (int i = 0; i < p; i++) {
+      for (int j = 0; j < r; j++) {
+        game_layer.beginShape();
+        game_layer.vertex(i * TILE, 0, j * TILE, 0, 0);
+        game_layer.vertex(i * TILE, 0, (j+1) * TILE, 0, 1);
+        game_layer.vertex((i+1) * TILE, 0, (j+1) * TILE, 1, 1);
+        game_layer.vertex((i+1) * TILE, 0, j * TILE, 1, 0);
+        game_layer.texture(tex_floor);
+        game_layer.textureWrap(REPEAT);
+        game_layer.endShape();
+      }
+    }
   }
 
   private void display_ceiling() {
     game_layer.beginShape();
     game_layer.vertex(0, h, 0, 0, 0);
-    game_layer.vertex(0, h, br, 0, tr);
-    game_layer.vertex(bp, h, br, tp, tr);
-    game_layer.vertex(bp, h, 0, tp, 0);
+    game_layer.vertex(0, h, r * TILE, 0, 1/p);
+    game_layer.vertex(p * TILE, h, r * TILE, 1/p, 1/r);
+    game_layer.vertex(p * TILE, h, 0, 1/p, 0);
     game_layer.texture(tex_ceiling);
     game_layer.textureWrap(REPEAT);
     game_layer.endShape();
   }
 
   private void display_walls() {
-    game_layer.beginShape();
-    game_layer.vertex(0, 0, 0, 0, 0);
-    game_layer.vertex(0, h, 0, 0, 1);
-    game_layer.vertex(bp, h, 0, tp, 1);
-    game_layer.vertex(bp, 0, 0, tp, 0);
-    game_layer.texture(tex_wall);
-    game_layer.textureWrap(REPEAT);
-    game_layer.endShape(); 
-
-    game_layer.beginShape();
-    game_layer.vertex(bp, 0, 0, 0, 0);
-    game_layer.vertex(bp, h, 0, 0, 1);
-    game_layer.vertex(bp, h, br, tr, 1);
-    game_layer.vertex(bp, 0, br, tr, 0);
-    game_layer.texture(tex_wall);
-    game_layer.textureWrap(REPEAT);
-    game_layer.endShape(); 
-
-    game_layer.beginShape();
-    game_layer.vertex(bp, 0, br, 0, 0);
-    game_layer.vertex(bp, h, br, 0, 1);
-    game_layer.vertex(0, h, br, tp, 1);
-    game_layer.vertex(0, 0, br, tp, 0);
-    game_layer.texture(tex_wall);
-    game_layer.textureWrap(REPEAT);
-    game_layer.endShape(); 
-
-    game_layer.beginShape();
-    game_layer.vertex(0, 0, br, 0, 0);
-    game_layer.vertex(0, h, br, 0, 1);
-    game_layer.vertex(0, h, 0, tr, 1);
-    game_layer.vertex(0, 0, 0, tr, 0);
-    game_layer.texture(tex_wall);
-    game_layer.textureWrap(REPEAT);
-    game_layer.endShape();
+    for (int i = 0; i < p; i++) {
+      for (int j = 0; j < r; j++) {
+        for (int k = 0; k < parts_wall; k++) {
+          game_layer.beginShape();
+          game_layer.vertex(i * TILE, k * h_part, 0, 0, 0);
+          game_layer.vertex(i * TILE, (k+1) * h_part, 0, 0, 1);
+          game_layer.vertex((i+1) * TILE, (k+1) * h_part, 0, 1, 1);
+          game_layer.vertex((i+1) * TILE, k * h_part, 0, 1, 0);
+          game_layer.texture(tex_wall);
+          game_layer.textureWrap(REPEAT);
+          game_layer.endShape();    
+      
+          game_layer.beginShape();
+          game_layer.vertex(p * TILE, 0, j * TILE, 0, 0);
+          game_layer.vertex(p * TILE, h, j * TILE, 0, 1);
+          game_layer.vertex(p * TILE, h, (j+1) * TILE, 1, 1);
+          game_layer.vertex(p * TILE, 0, (j+1) * TILE, 1, 0);
+          game_layer.texture(tex_wall);
+          game_layer.textureWrap(REPEAT);
+          game_layer.endShape();  
+          
+          game_layer.beginShape();
+          game_layer.vertex((i+1) * TILE, 0, r * TILE, 0, 0);
+          game_layer.vertex((i+1) * TILE, h, r * TILE, 0, 1);
+          game_layer.vertex(i * TILE, h, r * TILE, 1, 1);
+          game_layer.vertex(i * TILE, 0, r * TILE, 1, 0);
+          game_layer.texture(tex_wall);
+          game_layer.textureWrap(REPEAT);
+          game_layer.endShape();
+          
+          game_layer.beginShape();
+          game_layer.vertex(0, 0, (j+1) * TILE, 0, 0);
+          game_layer.vertex(0, h, (j+1) * TILE, 0, 1);
+          game_layer.vertex(0, h, j * TILE, 1, 1);
+          game_layer.vertex(0, 0, j * TILE, 1, 0);
+          game_layer.texture(tex_wall);
+          game_layer.textureWrap(REPEAT);
+          game_layer.endShape();
+        }
+      }
+    }
   }
 
   private void display_monster() {
