@@ -87,15 +87,6 @@ void draw() {
     }
     room.display();
 
-    if (gameover) {
-      fx.apply_game_over_shader();
-      gameplay.stop();
-      if (!game_over_song.isPlaying()) game_over_song.play();
-      if (fx.has_gameover_finished()) {
-        game_over_screen = true;
-        resetShader();
-      }
-    }
 
     if (!gameover) {
       if (room.check_ending_level()) {
@@ -116,6 +107,17 @@ void draw() {
     top_layer.endDraw();
     image(game_layer, 0, 0);
     image(top_layer, 0, 0);
+  }
+
+  if (gameover) {
+    fx.apply_game_over_shader();
+    gameplay.stop();
+    if (!game_over_song.isPlaying()) game_over_song.play();
+    if (fx.has_gameover_finished()) {
+      game_over_screen = true;
+      gameover = false;
+      resetShader();
+    }
   }
 }
 
@@ -254,7 +256,7 @@ void keyPressed() {
         cam_on = false;
         println("Tried to activate camera but there are no devices available!");
       }
-    } else  {
+    } else {
       cam.stop();
       println("Camera off");
     }

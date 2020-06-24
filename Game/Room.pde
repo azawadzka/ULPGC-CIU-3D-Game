@@ -236,34 +236,38 @@ class Room {
   }
 
   private void showText() {
-    top_layer.textSize(24);
-    top_layer.fill(128);
+    hint(DISABLE_DEPTH_TEST);
+    textSize(24);
+    fill(128);
 
-    top_layer.text("Press ", width/2-150, height/2+100);
-    top_layer.fill(255, 255, 0);
-    top_layer.text("F", width/2-150+textWidth("Press "), height/2+100);
-    top_layer.fill(128);
-    top_layer.text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
-    top_layer.fill(255);
+    text("Press ", width/2-150, height/2+100);
+    fill(255, 255, 0);
+    text("F", width/2-150+textWidth("Press "), height/2+100);
+    fill(128);
+    text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
+    fill(255);
+    hint(ENABLE_DEPTH_TEST);
   }
 
   private void showUnlockMessage() {
-    top_layer.textSize(24);
-    top_layer.fill(128);
+    hint(DISABLE_DEPTH_TEST);
+    textSize(24);
+    fill(128);
 
     if (player.owns_item_to_unlock(board.board[item_p][item_r].getRequirement())) {
-      top_layer.text("Press ", width/2-150, height/2+100);
-      top_layer.fill(255, 255, 0);
-      top_layer.text("B", width/2-150+textWidth("Pulsa "), height/2+100);
-      top_layer.fill(128);
-      top_layer.text(" to unlock the path", width/2-150+textWidth("Pulsa B"), height/2+100);
-      top_layer.fill(255);
+      text("Press ", width/2-150, height/2+100);
+      fill(255, 255, 0);
+      text("B", width/2-150+textWidth("Press "), height/2+100);
+      fill(128);
+      text(" to unlock the path", width/2-150+textWidth("Press B"), height/2+100);
+      fill(255);
     } else {
-      top_layer.text("You need ", width/2-150, height/2+100);
-      top_layer.fill(0, 0, 255);
-      top_layer.text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
-      top_layer.fill(255);
+      text("You need ", width/2-150, height/2+100);
+      fill(0, 0, 255);
+      text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
+      fill(255);
     }
+    hint(ENABLE_DEPTH_TEST);
   }
 
   private void update_item_info(int i, int j) {
