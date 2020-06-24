@@ -56,11 +56,12 @@ class Room {
 
   public void display() {
     game_layer.noStroke();
+    emit_lights();
     display_floor();
     display_walls();
     display_ceiling();
     display_figures();
-    if(monster != null) display_monster();
+    if (monster != null) display_monster();
     display_and_update_current_item();
     check_ending_level();
   }
@@ -117,7 +118,7 @@ class Room {
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();    
-      
+
           game_layer.beginShape();
           game_layer.vertex(p * TILE, k * h_part, j * TILE, 0, 0);
           game_layer.vertex(p * TILE, (k+1) * h_part, j * TILE, 0, 1);
@@ -126,7 +127,7 @@ class Room {
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();  
-          
+
           game_layer.beginShape();
           game_layer.vertex((i+1) * TILE, k * h_part, r * TILE, 0, 0);
           game_layer.vertex((i+1) * TILE, (k+1) * h_part, r * TILE, 0, 1);
@@ -135,7 +136,7 @@ class Room {
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();
-          
+
           game_layer.beginShape();
           game_layer.vertex(0, k * h_part, (j+1) * TILE, 0, 0);
           game_layer.vertex(0, (k+1) * h_part, (j+1) * TILE, 0, 1);
@@ -155,6 +156,27 @@ class Room {
     game_layer.translate(monster.offset_x, monster.offset_y, monster.offset_z);
     game_layer.shape(monster.model);
     game_layer.popMatrix();
+  }
+
+  private void emit_lights() {
+    for (int i = 0; i < board.size_p; i++) {
+      for (int j = 0; j < board.size_r; j++) {
+        if (board.board[i][j] != null) {
+          float px =  i * Room.TILE + board.board[i][j].offset_x;
+          float py =  board.board[i][j].offset_y;
+          float pz =  j * Room.TILE + board.board[i][j].offset_z;
+
+          if (board.board[i][j].name == "torch") {
+            game_layer.lightFalloff(0.15, 0.004, 0.00000001);
+            game_layer.pointLight(255, 120, 0, px, py - 68, pz);
+          } else if (board.board[i][j].name == "portal") {
+            game_layer.lightFalloff(0.05, 0.001, 0.000001);
+            game_layer.pointLight(50, 0, 100, px + 42, py - 75, pz);
+          }
+        }
+      }
+    }
+    game_layer.lightFalloff(1.0, 0.0, 0.0);
   }
 
   private void display_figures() {
@@ -288,7 +310,5 @@ class Room {
   public Obstacle getItem() {
     return item;
   }
-
-  
 }
 //------------------------------------------------------------------------------------------------------------------------------

@@ -6,7 +6,9 @@ class BoardFactory {
    Ending level: 8 , 8
    */
   private Board create_board1() {
-    Board board = new Board(8, 8, 7, 7);
+    Board board = new Board(8, 8, 6, 7);
+    
+    board.put_on_board(obstacleFactory.portal(), 7, 7);
 
     board.put_on_board(obstacleFactory.createWall(), 3, 2);
     board.put_on_board(obstacleFactory.createWall(), 3, 3);
@@ -20,13 +22,17 @@ class BoardFactory {
     board.put_on_board(obstacleFactory.destructiveWall(), 4, 7);
 
     board.put_on_board(obstacleFactory.bomb(), 7, 3);
-    board.put_on_board(obstacleFactory.pot(), 2, 4);
+    board.put_on_board(obstacleFactory.torch(), 7, 5);
+    board.put_on_board(obstacleFactory.torch(), 2, 3);
+    board.put_on_board(obstacleFactory.torch(), 0, 7);
 
     return board;
   }
 
   private Board create_board2() {
-    Board board = new Board(9, 9, 8, 4);
+    Board board = new Board(9, 9, 7, 4);
+    
+    board.put_on_board(obstacleFactory.portal(), 8, 4);
 
     board.put_on_board(obstacleFactory.createWall(), 8, 7);
     board.put_on_board(obstacleFactory.createWall(), 7, 7);
@@ -40,10 +46,10 @@ class BoardFactory {
     board.put_on_board(obstacleFactory.createWall(), 7, 2);
     board.put_on_board(obstacleFactory.createWall(), 7, 1);
     board.put_on_board(obstacleFactory.createWall(), 8, 1);
-    board.put_on_board(obstacleFactory.pot(), 4, 7);
-    board.put_on_board(obstacleFactory.pot(), 2, 6);
-    board.put_on_board(obstacleFactory.pot(), 2, 2);
-    board.put_on_board(obstacleFactory.pot(), 4, 1);
+    board.put_on_board(obstacleFactory.torch(), 4, 7);
+    board.put_on_board(obstacleFactory.torch(), 2, 6);
+    board.put_on_board(obstacleFactory.torch(), 2, 2);
+    board.put_on_board(obstacleFactory.torch(), 4, 1);
     board.put_on_board(obstacleFactory.key(), 8, 0);
     board.put_on_board(obstacleFactory.flamethrower(), 8, 8);
     board.put_on_board(obstacleFactory.door(), 6, 4);

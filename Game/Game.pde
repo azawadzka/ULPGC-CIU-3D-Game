@@ -38,7 +38,7 @@ int level = 0;
 boolean gameover = false;
 
 void setup() {
-  //surface.setTitle("The Room");
+  surface.setTitle("The Room");
   size(1000, 700, P3D);
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
@@ -75,7 +75,7 @@ void draw() {
 
     if (debug) debug_mode();
     hint(ENABLE_DEPTH_TEST);
-    game_layer.directionalLight(255, 255, 255, 0, 1, 0); // dim lights
+    game_layer.ambientLight(20, 20, 20); // dim lights
     torch.light();
     camera.cam();
     if (!gameover) {
