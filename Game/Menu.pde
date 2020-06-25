@@ -3,7 +3,7 @@
 import processing.sound.*;
 
 class Menu {
-  PImage background;
+  PImage background, controllers_arduino, controllers_mouse;
   //PImage title;
   PFont fontTerrorTitle;
   PFont fontTerror;
@@ -20,6 +20,8 @@ class Menu {
     tint = 0;
     fontTerrorTitle = createFont("resources/fonts/youmurdererbb_reg.ttf", 150);
     fontTerror = createFont("resources/fonts/youmurdererbb_reg.ttf", 48);
+    controllers_arduino = loadImage("resources/menu/controllers_arduino.jpg");
+    controllers_mouse = loadImage("resources/menu/controllers_mouse.jpg");
   }
 
   public void display() {
@@ -57,17 +59,59 @@ class Menu {
     if (credits_display) credits();
   }
 
-
-  public void controllers() {
-    background(0);
+  public void pause() {
     textAlign(CENTER);
     if (control==0) {
-      text("TEST\nPRESS LEFT BUTTON TO BACK TO THE MENU", width/2, height/2);
+      fill(0);
+      rect(0, height/2, width, height/2);
+      fill(255);
+      text("PRESS 'C' TO CONTINUE", width/2, height-30);
+      text("PRESS 'B' TO EXIT", width/2, height-60);
+      text("DOWN JOYSTICK TO CHANGE CONTROLS", width/2, height-90);
     } else {
-      text("TEST\nPRESS ENTER TO BACK TO THE MENU", width/2, height/2);
+      fill(0);
+      rect(0, 0, width, height/2);
+      fill(255);
+      text("PRESS 'P' TO CONTINUE", width/2, 30);
+      text("PRESS 'B' TO EXIT", width/2, 60);
+      text("PRESS 'UP' TO CHANGE CONTROLS", width/2, 90);
     }
 
     textAlign(BASELINE);
+  }
+  public void controllers() {
+    
+    background(0);
+    controllers_arduino.resize(width, height/2);
+    controllers_mouse.resize(width, height/2);
+    if (control==0) {
+
+      image(controllers_arduino, 0, 0);
+      tint(255, 127);
+      image(controllers_mouse, 0, height/2);
+
+      noTint();
+      if (status) {
+        fill(255);
+        textAlign(CENTER);
+        text("PRESS 'B' TO EXIT", width/2, height-40);
+        text("DOWN JOYSTICK TO CHANGE CONTROLS", width/2, height-15);
+        textAlign(BASELINE);
+      }
+    } else {
+      image(controllers_mouse, 0, height/2);
+      tint(255, 127);
+      image(controllers_arduino, 0, 0);
+      noTint();
+      if (status) {
+        fill(0);
+        textAlign(CENTER);
+        text("PRESS 'ENTER' TO EXIT", width/2, height-40);
+        text("PRESS 'UP' TO CHANGE CONTROLS", width/2, height-15);
+        textAlign(BASELINE);
+      }
+    }
+    
   }
 
   public void credits() {

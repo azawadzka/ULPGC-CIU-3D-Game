@@ -1,0 +1,22 @@
+# Blender3D MTL File: EeriePortal.blend
+# Material Count: 2
+newmtl RefRep.6584_Light.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.250000 0.250000 0.250000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Light.png
+
+
+newmtl RefRep.6536_Body.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.250000 0.250000 0.250000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Body.png

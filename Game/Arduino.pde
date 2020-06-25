@@ -76,29 +76,34 @@ public class Arduino {
 
 
   void rightButtonClicked() {
+    if (control==0) {
+      if (status) {
+        switch(menu.options) {
 
-    if (status) {
-      switch(menu.options) {
-
-      case 0:
-        status=false;
-        menu.intro.stop();
-        textFont(createFont("SansSerif", 16));
-        break;
-      case 1:
-        menu.set_controllers_display(true);
-        menu.set_credits_display(false);
-        break;
-      case 2:
-        menu.set_controllers_display(false);
-        menu.set_credits_display(true);
-        break;
-      }
-    } else {
-      if (player.request_move()) {
-        arrow.cancel_false_click();
+        case 0:
+          status=false;
+          menu.intro.stop();
+          textFont(createFont("SansSerif", 16));
+          break;
+        case 1:
+          menu.set_controllers_display(true);
+          menu.set_credits_display(false);
+          break;
+        case 2:
+          menu.set_controllers_display(false);
+          menu.set_credits_display(true);
+          break;
+        }
       } else {
-        arrow.set_false_click();
+        if (!game_over_screen) {
+          if (player.request_move()) {
+            arrow.cancel_false_click();
+            steps.play();
+            if (!check_collision_player_monster()) monster.request_move();
+          } else {
+            arrow.set_false_click();
+          }
+        }
       }
     }
   }
@@ -107,44 +112,63 @@ public class Arduino {
 
 
   void leftButtonClicked() {
-    if (status) {
-      if (menu.get_controllers_display()) {
-        menu.set_controllers_display(false);
-      } else if (menu.get_credits_display()) {
-        menu.set_credits_display(false);
-      }
-    } else {
+    if (control==0) {
 
-      if (room.getItem() != null && room.getItem().getPickable()) {
-        Obstacle item = room.getItem();
-        item.setPickable(false);
-        player.inventory.addItem(item);
-        board.remove_from_board(room.item_p, room.item_r);
-      }
+      if (status) {
+        if (menu.get_controllers_display()) {
+          menu.set_controllers_display(false);
+        } else if (menu.get_credits_display()) {
+          menu.set_credits_display(false);
+        }
+      } else {
+        if (pause)reset();
+        if (room.getItem() != null && room.getItem().getPickable()) {
+          Obstacle item = room.getItem();
+          item.setPickable(false);
+          player.inventory.addItem(item);
+          board.remove_from_board(room.item_p, room.item_r);
+        }
 
-      if (  room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-        board.remove_from_board(room.item_p, room.item_r);    
-        player.inventory.removeItem(room.getItem());
-        player.inventory.display();
+        if (  room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
+          board.remove_from_board(room.item_p, room.item_r);    
+          player.inventory.removeItem(room.getItem());
+          player.inventory.display();
+        }
       }
     }
   }
 
   //TO DO
   void pause_Button_Clicked() {
-    println("PAUSE CLICKED");
+    if (control==0) {
+      if (!pause) {
+        pause = true;
+      } else {
+        pause = false;
+      }
+    }
   }
 
   void Joystick_Y_axis_event() {
-    if (status && !menu.get_controllers_display() && !menu.get_credits_display()) {
+    if (control==0) {
+      if (status && !menu.get_controllers_display() && !menu.get_credits_display()) {
 
-      //DOWN
-      if (buffer[0]<514) {
-        menu.options--;
-        if (menu.options<0)menu.options=2;
-      } else if (buffer[0]>525) {
-        menu.options++;
-        if (menu.options>2)menu.options=0;
+        //UP
+        if (buffer[0]<514) {
+          menu.options--;
+          if (menu.options<0)menu.options=2;
+        } else if (buffer[0]>525) {   //DOWN
+          menu.options++;
+          if (menu.options>2)menu.options=0;
+        }
+      } else if (menu.get_controllers_display() || pause) {
+
+        //UP
+        if (buffer[0]<100) {
+          control=0;
+        } else if (buffer[0]>1000) {   //DOWN
+          control=1;
+        }
       }
     }
   }
