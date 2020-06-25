@@ -22,7 +22,7 @@ class FX {
     PImage c = get();
     filter(shader);
     shader.set("u_zoom", zoom);
-    image(c, 0, 0);
+    top_layer.image(c, 0, 0);
     zoom *= 1.14;
   }
 
@@ -33,12 +33,11 @@ class FX {
 
 
   public void gameover_screen() {
-    top_layer.background(0);
-    top_layer.fill(255, 0, 0, tint);
-    top_layer.tint(tint);
-    top_layer.textAlign(CENTER);
-    top_layer.textFont(font_game_over);
-    top_layer.text("GAME OVER", width/2, height/2);
+    background(0);
+    fill(255, 0, 0, tint);
+    textAlign(CENTER);
+    textFont(font_game_over);
+    text("GAME OVER", width/2, height/2,0);
     tint++;
     if (tint >= 255)tint = 255;
   }

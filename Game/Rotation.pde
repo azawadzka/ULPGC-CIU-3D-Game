@@ -1,14 +1,12 @@
 public float ROTATION; // [-PI, PI]
-public float TORCH_VERTICAL_POINT; // [-300, 0]
-public int joystick_curvature = 0;  
-private float joystick_rotation_change = 0.05;
+public float TORCH_VERTICAL_POINT; // [-300, 0]  
 private int x_axis_last_value = 0;
 
 public void updateRotation() {
   switch (control) {
     case 0:
       ROTATION = getRotationFromJoystick();
-      TORCH_VERTICAL_POINT = get_torch_vertical_point_from_mouse();
+      TORCH_VERTICAL_POINT = get_torch_vertical_point_from_Joy();
       break;
     case 1:
       ROTATION = getRotationFromMouse();
@@ -18,19 +16,23 @@ public void updateRotation() {
 }
 
 private float getRotationFromMouse() {
-  return map(mouseX, 0, width, 0, 10) % TWO_PI - PI;
+  x_axis_last_value=mouseX;
+  reset_X_axis();
+  return map(mouseX, 0, width, -PI, PI);
 }
 
 private float getRotationFromJoystick() {
-  // joystick_curvature data is obtained in serial port events in main class (Game)
-  float change = 0;
-  if (joystick_curvature > 515 || joystick_curvature < 500) 
-    change = joystick_rotation_change * (joystick_curvature > 507  ? +1 : -1);  
-  return (ROTATION + change + PI) % TWO_PI - PI; // make within range [-PI, PI] 
+  if (arduino.get_Joystick_X_Value()>515 || arduino.get_Joystick_X_Value()<500) x_axis_last_value+= (arduino.get_Joystick_X_Value()>507 ) ? +7 : -7;
+  reset_X_axis();
+  return map(x_axis_last_value, 0, width, -PI, PI);
 }
 
 private float get_torch_vertical_point_from_mouse() {
   return map(mouseY, 0, height, -300, 00);
+}
+
+private float get_torch_vertical_point_from_Joy() {
+  return map(arduino.get_Joystick_Y_Value(), 0, height, -300, 00);
 }
 
 /*
@@ -39,21 +41,21 @@ other sensors...
 
 //Returns a pair of values -1 or 1 that represents the change of position of board in axes X and Z based on current rotation.
 public int[] getWalkingDirection() {
-    int mp, mr;
-    if (ROTATION < -PI*3/4 || ROTATION > PI*3/4) {
-        mp = -1;
-        mr = 0;
-    } else if (ROTATION < -PI/4) {
-        mp = 0;
-        mr = -1;
-    } else if (ROTATION < PI/4) {
-        mp = 1;
-        mr = 0;
-    } else {
-        mp = 0;
-        mr = 1;
-    }
-    return new int[] {mp, mr};
+  int mp, mr;
+  if (x_axis_last_value>875 || x_axis_last_value<125 ) {
+    mp = -1;
+    mr = 0;
+  } else if (x_axis_last_value>125 && x_axis_last_value<375) {
+    mp = 0;
+    mr = -1;
+  } else if (x_axis_last_value>375 && x_axis_last_value<625) {
+    mp = 1;
+    mr = 0;
+  } else {
+    mp = 0;
+    mr = 1;
+  }
+  return new int[] {mp, mr};
 }
 
 void reset_X_axis(){

@@ -56,11 +56,12 @@ class Room {
 
   public void display() {
     game_layer.noStroke();
+    emit_lights();
     display_floor();
     display_walls();
     display_ceiling();
     display_figures();
-    if(monster != null) display_monster();
+    if (monster != null) display_monster();
     display_and_update_current_item();
     check_ending_level();
   }
@@ -117,7 +118,7 @@ class Room {
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();    
-      
+
           game_layer.beginShape();
           game_layer.vertex(p * TILE, k * h_part, j * TILE, 0, 0);
           game_layer.vertex(p * TILE, (k+1) * h_part, j * TILE, 0, 1);
@@ -126,7 +127,7 @@ class Room {
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();  
-          
+
           game_layer.beginShape();
           game_layer.vertex((i+1) * TILE, k * h_part, r * TILE, 0, 0);
           game_layer.vertex((i+1) * TILE, (k+1) * h_part, r * TILE, 0, 1);
@@ -135,7 +136,7 @@ class Room {
           game_layer.texture(tex_wall);
           game_layer.textureWrap(REPEAT);
           game_layer.endShape();
-          
+
           game_layer.beginShape();
           game_layer.vertex(0, k * h_part, (j+1) * TILE, 0, 0);
           game_layer.vertex(0, (k+1) * h_part, (j+1) * TILE, 0, 1);
@@ -155,6 +156,27 @@ class Room {
     game_layer.translate(monster.offset_x, monster.offset_y, monster.offset_z);
     game_layer.shape(monster.model);
     game_layer.popMatrix();
+  }
+
+  private void emit_lights() {
+    for (int i = 0; i < board.size_p; i++) {
+      for (int j = 0; j < board.size_r; j++) {
+        if (board.board[i][j] != null) {
+          float px =  i * Room.TILE + board.board[i][j].offset_x;
+          float py =  board.board[i][j].offset_y;
+          float pz =  j * Room.TILE + board.board[i][j].offset_z;
+
+          if (board.board[i][j].name == "torch") {
+            game_layer.lightFalloff(0.15, 0.004, 0.00000001);
+            game_layer.pointLight(255, 120, 0, px, py - 68, pz);
+          } else if (board.board[i][j].name == "portal") {
+            game_layer.lightFalloff(0.05, 0.001, 0.000001);
+            game_layer.pointLight(50, 0, 100, px + 42, py - 75, pz);
+          }
+        }
+      }
+    }
+    game_layer.lightFalloff(1.0, 0.0, 0.0);
   }
 
   private void display_figures() {
@@ -236,34 +258,47 @@ class Room {
   }
 
   private void showText() {
-    top_layer.textSize(24);
-    top_layer.fill(128);
+    hint(DISABLE_DEPTH_TEST);
+    textSize(24);
+    fill(128);
+    text("Press ", width/2-150, height/2+100);
+    fill(255, 255, 0);
+    if(control==0){
+    text("B", width/2-150+textWidth("Press "), height/2+100);
+    }else{
+    text("F", width/2-150+textWidth("Press "), height/2+100);
+    }
+    
+    fill(128);
+    if(control==0){
+        text(" to pick " + item.get_name(), width/2-150+textWidth("Press B"), height/2+100);
+    }else{
+        text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
+    }
 
-    top_layer.text("Press ", width/2-150, height/2+100);
-    top_layer.fill(255, 255, 0);
-    top_layer.text("F", width/2-150+textWidth("Press "), height/2+100);
-    top_layer.fill(128);
-    top_layer.text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
-    top_layer.fill(255);
+    fill(255);
+    hint(ENABLE_DEPTH_TEST);
   }
 
   private void showUnlockMessage() {
-    top_layer.textSize(24);
-    top_layer.fill(128);
+    hint(DISABLE_DEPTH_TEST);
+    textSize(24);
+    fill(128);
 
     if (player.owns_item_to_unlock(board.board[item_p][item_r].getRequirement())) {
-      top_layer.text("Press ", width/2-150, height/2+100);
-      top_layer.fill(255, 255, 0);
-      top_layer.text("B", width/2-150+textWidth("Pulsa "), height/2+100);
-      top_layer.fill(128);
-      top_layer.text(" to unlock the path", width/2-150+textWidth("Pulsa B"), height/2+100);
-      top_layer.fill(255);
+      text("Press ", width/2-150, height/2+100);
+      fill(255, 255, 0);
+      text("B", width/2-150+textWidth("Press "), height/2+100);
+      fill(128);
+      text(" to unlock the path", width/2-150+textWidth("Press B"), height/2+100);
+      fill(255);
     } else {
-      top_layer.text("You need ", width/2-150, height/2+100);
-      top_layer.fill(0, 0, 255);
-      top_layer.text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
-      top_layer.fill(255);
+      text("You need ", width/2-150, height/2+100);
+      fill(0, 0, 255);
+      text( board.board[item_p][item_r].getRequirement(), width/2-150+textWidth("You need "), height/2+100);
+      fill(255);
     }
+    hint(ENABLE_DEPTH_TEST);
   }
 
   private void update_item_info(int i, int j) {
@@ -284,7 +319,5 @@ class Room {
   public Obstacle getItem() {
     return item;
   }
-
-  
 }
 //------------------------------------------------------------------------------------------------------------------------------
