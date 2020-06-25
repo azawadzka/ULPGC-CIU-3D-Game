@@ -121,7 +121,7 @@ public class Arduino {
           menu.set_credits_display(false);
         }
       } else {
-
+        if (pause)reset();
         if (room.getItem() != null && room.getItem().getPickable()) {
           Obstacle item = room.getItem();
           item.setPickable(false);

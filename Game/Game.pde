@@ -41,6 +41,7 @@ boolean gameover = false;
 void setup() {
   surface.setTitle("The Room");
   size(1000, 700, P3D);
+  
   obstacleFactory = new ObstacleFactory();
   boardFactory = new BoardFactory();
   monsterFactory = new MonsterFactory();
@@ -225,7 +226,7 @@ void keyPressed() {
     }
   } else {
     if (!pause) {
-      if (key == 'l') next_level();
+      //if (key == 'l') next_level();
 
       if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
         Obstacle item = room.getItem();
@@ -254,18 +255,20 @@ void keyPressed() {
           start_arduino();
         }
       }
+      
+      if(key == 'B' || key == 'b')reset();
     }
   }
 
   // D - debug mode
-  if (key == 'd' || key == 'D') {
+  /*if (key == 'd' || key == 'D') {
     debug = !debug;
     if (debug) room.set_textures("DEBUG");
     else room.set_textures("NORMAL");
-  }
+  }*/
 
   // C - video camera
-  if (key == 'c' || key == 'C') {
+  /*if (key == 'c' || key == 'C') {
     cam_on = !cam_on;
     if (cam_on) {
       try {
@@ -281,7 +284,7 @@ void keyPressed() {
       cam.stop();
       println("Camera off");
     }
-  }
+  }*/
 }
 
 void transition() {
