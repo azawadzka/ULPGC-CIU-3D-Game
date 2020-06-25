@@ -261,6 +261,7 @@ class Room {
     hint(DISABLE_DEPTH_TEST);
     textSize(24);
     fill(128);
+
     text("Press ", width/2-150, height/2+100);
     fill(255, 255, 0);
     if(control==0){

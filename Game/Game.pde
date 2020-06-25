@@ -66,6 +66,7 @@ void draw() {
   } else if (status) {
     menu.display();
   } else {
+
     if (!pause) {
       if (!gameplay.isPlaying()) gameplay.play();
       updateRotation();
@@ -86,6 +87,7 @@ void draw() {
         if (!monster.is_moving() || !player.is_moving()) { 
           if (check_collision_player_monster()) do_game_over(); // monster or player finished moving, check if monster colided with player
         }
+
       }
       room.display();
 
@@ -114,16 +116,16 @@ void draw() {
       menu.controllers();
       menu.pause();
     }
+  }
 
-    if (gameover) {
-      fx.apply_game_over_shader();
-      gameplay.stop();
-      if (!game_over_song.isPlaying()) game_over_song.play();
-      if (fx.has_gameover_finished()) {
-        game_over_screen = true;
-        gameover = false;
-        resetShader();
-      }
+  if (gameover) {
+    fx.apply_game_over_shader();
+    gameplay.stop();
+    if (!game_over_song.isPlaying()) game_over_song.play();
+    if (fx.has_gameover_finished()) {
+      game_over_screen = true;
+      gameover = false;
+      resetShader();
     }
   }
 }
