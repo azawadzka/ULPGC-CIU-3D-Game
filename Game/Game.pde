@@ -28,6 +28,7 @@ boolean debug = false;
 boolean cam_on = false;
 boolean status = true;  //which part is the player
 boolean game_over_screen = false;
+boolean pause = false;
 
 BoardFactory boardFactory;
 ObstacleFactory obstacleFactory;
@@ -65,48 +66,56 @@ void draw() {
   } else if (status) {
     menu.display();
   } else {
-    if (!gameplay.isPlaying()) gameplay.play();
-    updateRotation();
 
-    game_layer.beginDraw();
-    game_layer.clear();
-    top_layer.beginDraw();
-    top_layer.clear();
+    if (!pause) {
+      if (!gameplay.isPlaying()) gameplay.play();
+      updateRotation();
 
-    if (debug) debug_mode();
-    hint(ENABLE_DEPTH_TEST);
-    game_layer.ambientLight(20, 20, 20); // dim lights
-    torch.light();
-    camera.cam();
-    if (!gameover) {
-      player.move();
-      monster.move();
-      if (!monster.is_moving() || !player.is_moving()) { 
-        if (check_collision_player_monster()) do_game_over(); // monster or player finished moving, check if monster colided with player
+      game_layer.beginDraw();
+      game_layer.clear();
+      top_layer.beginDraw();
+      top_layer.clear();
+
+      if (debug) debug_mode();
+      hint(ENABLE_DEPTH_TEST);
+      game_layer.ambientLight(20, 20, 20); // dim lights
+      torch.light();
+      camera.cam();
+      if (!gameover) {
+        player.move();
+        monster.move();
+        if (!monster.is_moving() || !player.is_moving()) { 
+          if (check_collision_player_monster()) do_game_over(); // monster or player finished moving, check if monster colided with player
+        }
+
       }
-    }
-    room.display();
+      room.display();
 
 
-    if (!gameover) {
-      if (room.check_ending_level()) {
-        transition();
-      } else {
-        game_layer.fill(255, 255, 255, 255);
-        tint = 0;
+      if (!gameover) {
+        if (room.check_ending_level()) {
+          transition();
+        } else {
+          game_layer.fill(255, 255, 255, 255);
+          tint = 0;
+        }
+
+        hint(DISABLE_DEPTH_TEST);
+        arrow.display();
+        player.inventory.display();
       }
 
-      hint(DISABLE_DEPTH_TEST);
-      arrow.display();
-      player.inventory.display();
+      display_player_cam();
+
+      game_layer.endDraw();
+      top_layer.endDraw();
+      image(game_layer, 0, 0, width, height);
+      image(top_layer, 0, 0, width, height);
+    } else {
+
+      menu.controllers();
+      menu.pause();
     }
-
-    display_player_cam();
-
-    game_layer.endDraw();
-    top_layer.endDraw();
-    image(game_layer, 0, 0);
-    image(top_layer, 0, 0);
   }
 
   if (gameover) {
@@ -150,7 +159,7 @@ void next_level() {
 }
 
 private void try_moving_player() {
-  if (!status && !game_over_screen) {
+  if (!status && !game_over_screen && !pause) {
     if (player.request_move()) {
       arrow.cancel_false_click();
       steps.play();
@@ -181,11 +190,20 @@ void keyPressed() {
     if (keyCode==UP && !menu.get_controllers_display() && !menu.get_credits_display()) {
       menu.options--;
       if (menu.options<0)menu.options=2;
+    } else if (keyCode==UP && menu.get_controllers_display()) {
+      if (control==1) {
+        control=0;
+        start_arduino();
+      }
     }
 
     if (keyCode==DOWN && !menu.get_controllers_display() && !menu.get_credits_display()) {
       menu.options++;
       if (menu.options>2)menu.options=0;
+    } else if (keyCode==DOWN && menu.get_controllers_display()) {
+      if (control==0) {
+        control=1;
+      }
     }
 
     if (keyCode==ENTER) {
@@ -208,31 +226,36 @@ void keyPressed() {
       }
     }
   } else {
-    if (key == 'l') next_level();
+    if (!pause) {
+      if (key == 'l') next_level();
 
-    if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
-      Obstacle item = room.getItem();
-      item.setPickable(false);
-      player.inventory.addItem(item);
-      board.remove_from_board(room.item_p, room.item_r);
-    }
+      if (room.getItem() != null && (key == 'F' || key == 'f') && room.getItem().getPickable()) {
+        Obstacle item = room.getItem();
+        item.setPickable(false);
+        player.inventory.addItem(item);
+        board.remove_from_board(room.item_p, room.item_r);
+      }
 
-    if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
-      board.remove_from_board(room.item_p, room.item_r);
-      player.inventory.removeItem(room.getItem());
-      player.inventory.display();
-    }
-  }
+      if ((key == 'B' || key == 'b') && room.player_can_unlock()) { //room.getLockedObject() != null &&  && room.getLockedObject().isUnlockable()
+        board.remove_from_board(room.item_p, room.item_r);
+        player.inventory.removeItem(room.getItem());
+        player.inventory.display();
+      }
 
-  // J - joystick control
-  if (key == 'j' || key == 'J') {
-    try {
-      arduino_Serial= new Serial(this, Serial.list()[0], 9600);
-      arduino= new Arduino(arduino_Serial);
-      control = 0;
-    }
-    catch (Exception e) {
-      control = 1;
+      if (key == 'P' || key == 'p') pause = true;
+    } else {
+      if (key == 'P' || key == 'p') pause = false;
+      if (keyCode==DOWN) {
+        if (control==0) {
+          control=1;
+        }
+      }
+      if (keyCode==UP) {
+        if (control==1) {
+          control=0;
+          start_arduino();
+        }
+      }
     }
   }
 
@@ -276,4 +299,35 @@ void transition() {
 
 void serialEvent(Serial arduino_Serial) {
   arduino.serial_Event_Manager(arduino_Serial);
+}
+
+void start_arduino() {
+  if (control==0 && arduino== null) {
+    try {
+      arduino_Serial= new Serial(this, Serial.list()[0], 9600);
+      arduino= new Arduino(arduino_Serial);
+      control = 0;
+    }
+    catch (Exception e) {
+      control = 1;
+    }
+  }
+}
+
+
+
+void reset() {
+  status = true;
+  obstacleFactory = new ObstacleFactory();
+  boardFactory = new BoardFactory();
+  monsterFactory = new MonsterFactory();
+  menu = new Menu();
+  level = 0;
+  next_level();
+  gameplay.stop();
+  steps.stop();
+  game_over_song.stop();
+  pause = false;
+  gameover = false;
+  game_over_screen = false;
 }

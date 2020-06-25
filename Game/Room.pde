@@ -264,9 +264,19 @@ class Room {
 
     text("Press ", width/2-150, height/2+100);
     fill(255, 255, 0);
+    if(control==0){
+    text("B", width/2-150+textWidth("Press "), height/2+100);
+    }else{
     text("F", width/2-150+textWidth("Press "), height/2+100);
+    }
+    
     fill(128);
-    text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
+    if(control==0){
+        text(" to pick " + item.get_name(), width/2-150+textWidth("Press B"), height/2+100);
+    }else{
+        text(" to pick " + item.get_name(), width/2-150+textWidth("Press F"), height/2+100);
+    }
+
     fill(255);
     hint(ENABLE_DEPTH_TEST);
   }
