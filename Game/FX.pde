@@ -37,7 +37,7 @@ class FX {
     fill(255, 0, 0, tint);
     textAlign(CENTER);
     textFont(font_game_over);
-    text("GAME OVER", width/2, height/2,0);
+    text("GAME OVER\n PRESS ESC TO EXIT", width/2, height/2,0);
     tint++;
     if (tint >= 255)tint = 255;
   }
