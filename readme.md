@@ -6,7 +6,7 @@ University of Las Palmas de Gran Canaria, summer 2020
 * [Ismael Aarab Umpiérrez](https://github.com/canary255)
 * [Ruben García Quintana](https://github.com/RubenGQ97)
 
-<a href="https://vimeo.com/449723968"><img src="images/img.png"></a>
+<a href="https://vimeo.com/449723968"><img src="Images/img.png"></a>
 
 #### Steering: 
 mouse left-right: rotation of view
